@@ -1,5 +1,6 @@
 package com.project3.teacherwanted.controller;
 
+import com.project3.teacherwanted.constant.CourseCategory;
 import com.project3.teacherwanted.dto.CourseRequest;
 import com.project3.teacherwanted.model.CourseVo;
 import com.project3.teacherwanted.service.CourseService;
@@ -17,8 +18,12 @@ public class CourseController {
     private CourseService courseService;
 
     @GetMapping("/courses")
-    public ResponseEntity<List<CourseVo>> getCourses(){
-        List<CourseVo> courseVoList = courseService.getCourses();
+    public ResponseEntity<List<CourseVo>> getCourses(
+            //查詢條件
+            @RequestParam (required = false) CourseCategory category,
+            @RequestParam (required = false) String search
+            ){
+        List<CourseVo> courseVoList = courseService.getCourses(category, search);
         return ResponseEntity.status(HttpStatus.OK).body(courseVoList);
     }
 

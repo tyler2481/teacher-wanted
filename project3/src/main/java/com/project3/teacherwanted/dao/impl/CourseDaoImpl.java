@@ -1,5 +1,6 @@
 package com.project3.teacherwanted.dao.impl;
 
+import com.project3.teacherwanted.constant.CourseCategory;
 import com.project3.teacherwanted.dao.CourseDao;
 import com.project3.teacherwanted.dto.CourseRequest;
 import com.project3.teacherwanted.model.CourseVo;
@@ -21,12 +22,22 @@ public class CourseDaoImpl implements CourseDao {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Override
-    public List<CourseVo> getCourses() {
+    public List<CourseVo> getCourses(CourseCategory category, String search) {
         String sql = "select course_id, course_name, course_category_id, course_detail, course_price, " +
                 " course_length, cooling_off_period, tea_id, course_total_rank, course_total_evaluate, " +
-                " bought_count, course_remarks, course_status from COURSE ";
+                " bought_count, course_remarks, course_status from COURSE where 1=1 ";
 
         Map<String, Object> map = new HashMap<>();
+
+        if (category != null){
+            sql = sql + " and course_category_id = :courseCategory";
+            map.put("courseCategory", category.getCategoryId());
+        }
+        if(search != null){
+            sql = sql + "and course_name like :search";
+            map.put("search", "%" + search + "%");
+        }
+
         List<CourseVo> courseVoList = namedParameterJdbcTemplate.query(sql, map, new CourseRowMapper());
         return courseVoList;
     }
