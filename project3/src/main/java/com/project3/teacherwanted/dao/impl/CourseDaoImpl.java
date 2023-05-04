@@ -30,14 +30,15 @@ public class CourseDaoImpl implements CourseDao {
         Map<String, Object> map = new HashMap<>();
 
         //查詢條件
-        if (courseQueryParams.getCategory() != null){
-            sql = sql + " and course_category_id = :courseCategory ";
-            map.put("courseCategory", courseQueryParams.getCategory().getCategoryId());
-        }
-        if(courseQueryParams.getSearch() != null){
-            sql = sql + " and course_name like :search ";
-            map.put("search", "%" + courseQueryParams.getSearch() + "%");
-        }
+        sql = addFilteringSql(sql, map, courseQueryParams);
+//        if (courseQueryParams.getCategory() != null){
+//            sql = sql + " and course_category_id = :courseCategory ";
+//            map.put("courseCategory", courseQueryParams.getCategory().getCategoryId());
+//        }
+//        if(courseQueryParams.getSearch() != null){
+//            sql = sql + " and course_name like :search ";
+//            map.put("search", "%" + courseQueryParams.getSearch() + "%");
+//        }
         Integer total = namedParameterJdbcTemplate.queryForObject(sql, map, Integer.class);
         return total;
     }
@@ -148,5 +149,18 @@ public class CourseDaoImpl implements CourseDao {
 
         map.put("courseId", courseId);
         namedParameterJdbcTemplate.update(sql, map);
+    }
+
+    private String addFilteringSql(String sql, Map<String, Object> map, CourseQueryParams courseQueryParams) {
+        //查詢條件
+        if (courseQueryParams.getCategory() != null) {
+            sql = sql + " and course_category_id = :courseCategory ";
+            map.put("courseCategory", courseQueryParams.getCategory().getCategoryId());
+        }
+        if (courseQueryParams.getSearch() != null) {
+            sql = sql + " and course_name like :search ";
+            map.put("search", "%" + courseQueryParams.getSearch() + "%");
+        }
+        return sql;
     }
 }
