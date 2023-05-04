@@ -1,13 +1,13 @@
 package com.project3.teacherwanted.controller;
 
+import com.project3.teacherwanted.dto.CourseRequest;
 import com.project3.teacherwanted.model.CourseVo;
 import com.project3.teacherwanted.service.CourseService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class CourseController {
@@ -23,5 +23,31 @@ public class CourseController {
         }else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+    }
+
+    @PostMapping("/courses")
+    public ResponseEntity<CourseVo> createCourse(@RequestBody @Valid CourseRequest courseRequest){
+        Integer courseId = courseService.createCourse(courseRequest);
+        CourseVo courseVo = courseService.getCourseById(courseId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(courseVo);
+    }
+
+    @PutMapping("/courses/{courseId}")
+    public ResponseEntity<CourseVo> updateCourse(@PathVariable Integer courseId,
+                                                 @RequestBody @Valid CourseRequest courseRequest){
+        CourseVo courseVo = courseService.getCourseById(courseId);
+        if(courseVo == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }else {
+            courseService.updateCourse(courseId, courseRequest);
+            CourseVo updatedCourse = courseService.getCourseById(courseId);
+            return ResponseEntity.status(HttpStatus.OK).body(updatedCourse);
+        }
+    }
+
+    @DeleteMapping("/courses/{courseId}")
+    public ResponseEntity<Object> deleteCourse(@PathVariable Integer courseId){
+        courseService.deleteCourseById(courseId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

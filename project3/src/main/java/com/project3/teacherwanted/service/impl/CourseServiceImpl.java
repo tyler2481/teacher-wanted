@@ -1,6 +1,7 @@
 package com.project3.teacherwanted.service.impl;
 
 import com.project3.teacherwanted.dao.CourseDao;
+import com.project3.teacherwanted.dto.CourseRequest;
 import com.project3.teacherwanted.model.CourseVo;
 import com.project3.teacherwanted.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,5 +14,20 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public CourseVo getCourseById(Integer courseId) {
         return courseDao.getCourseById(courseId);
+    }
+
+    @Override
+    public Integer createCourse(CourseRequest courseRequest) {
+        return courseDao.createCourse(courseRequest);
+    }
+
+    @Override
+    public void updateCourse(Integer courseId, CourseRequest courseRequest) {
+        courseDao.updateCourse(courseId, courseRequest);
+    }
+
+    @Override
+    public void deleteCourseById(Integer courseId) {
+        courseDao.deleteCourseById(courseId);
     }
 }
