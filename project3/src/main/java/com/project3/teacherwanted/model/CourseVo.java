@@ -1,5 +1,7 @@
 package com.project3.teacherwanted.model;
 
+import java.util.Date;
+
 public class CourseVo {
     Integer courseId;
     String courseName;
@@ -14,6 +16,8 @@ public class CourseVo {
     Integer boughtCount;
     String courseRemarks;
     Integer courseStatus;
+    Date createTime;
+    Date updateTime;
 
     public CourseVo() {
     }
@@ -120,5 +124,21 @@ public class CourseVo {
 
     public void setCourseStatus(Integer courseStatus) {
         this.courseStatus = courseStatus;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

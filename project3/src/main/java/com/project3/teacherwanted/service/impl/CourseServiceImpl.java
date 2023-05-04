@@ -2,6 +2,7 @@ package com.project3.teacherwanted.service.impl;
 
 import com.project3.teacherwanted.constant.CourseCategory;
 import com.project3.teacherwanted.dao.CourseDao;
+import com.project3.teacherwanted.dto.CourseQueryParams;
 import com.project3.teacherwanted.dto.CourseRequest;
 import com.project3.teacherwanted.model.CourseVo;
 import com.project3.teacherwanted.service.CourseService;
@@ -16,8 +17,8 @@ public class CourseServiceImpl implements CourseService {
     private CourseDao courseDao;
 
     @Override
-    public List<CourseVo> getCourses(CourseCategory category, String search) {
-        return courseDao.getCourses(category, search);
+    public List<CourseVo> getCourses(CourseQueryParams courseQueryParams) {
+        return courseDao.getCourses(courseQueryParams);
     }
 
     @Override

@@ -25,6 +25,8 @@ public class CourseRowMapper implements RowMapper<CourseVo> {
         courseVo.setBoughtCount(rs.getInt("bought_count"));
         courseVo.setCourseRemarks(rs.getString("course_remarks"));
         courseVo.setCourseStatus(rs.getInt("course_status"));
+        courseVo.setCreateTime(rs.getTimestamp("create_time"));
+        courseVo.setUpdateTime(rs.getTimestamp("update_time"));
         return courseVo;
     }
 }

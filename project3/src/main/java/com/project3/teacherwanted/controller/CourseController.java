@@ -1,6 +1,7 @@
 package com.project3.teacherwanted.controller;
 
 import com.project3.teacherwanted.constant.CourseCategory;
+import com.project3.teacherwanted.dto.CourseQueryParams;
 import com.project3.teacherwanted.dto.CourseRequest;
 import com.project3.teacherwanted.model.CourseVo;
 import com.project3.teacherwanted.service.CourseService;
@@ -21,9 +22,18 @@ public class CourseController {
     public ResponseEntity<List<CourseVo>> getCourses(
             //查詢條件
             @RequestParam (required = false) CourseCategory category,
-            @RequestParam (required = false) String search
+            @RequestParam (required = false) String search,
+            //排序
+            @RequestParam (defaultValue = "create_time") String orderBy,
+            @RequestParam (defaultValue = "desc") String sort
             ){
-        List<CourseVo> courseVoList = courseService.getCourses(category, search);
+        CourseQueryParams courseQueryParams = new CourseQueryParams();
+        courseQueryParams.setCategory(category);
+        courseQueryParams.setSearch(search);
+        courseQueryParams.setOrderBy(orderBy);
+        courseQueryParams.setSort(sort);
+
+        List<CourseVo> courseVoList = courseService.getCourses(courseQueryParams);
         return ResponseEntity.status(HttpStatus.OK).body(courseVoList);
     }
 
