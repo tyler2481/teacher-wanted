@@ -8,6 +8,7 @@ import com.project3.teacherwanted.model.CourseVo;
 import java.util.List;
 
 public interface CourseDao {
+    Integer countCourse(CourseQueryParams courseQueryParams);
     List<CourseVo> getCourses(CourseQueryParams courseQueryParams);
     CourseVo getCourseById(Integer courseId);
 

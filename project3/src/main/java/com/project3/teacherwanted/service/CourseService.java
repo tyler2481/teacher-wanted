@@ -8,6 +8,7 @@ import com.project3.teacherwanted.model.CourseVo;
 import java.util.List;
 
 public interface CourseService {
+    Integer countCourse(CourseQueryParams courseQueryParams);
     List<CourseVo> getCourses(CourseQueryParams courseQueryParams);
     CourseVo getCourseById(Integer courseId);
 
@@ -16,4 +17,6 @@ public interface CourseService {
     void updateCourse(Integer courseId, CourseRequest courseRequest);
 
     void deleteCourseById(Integer courseId);
+
+
 }

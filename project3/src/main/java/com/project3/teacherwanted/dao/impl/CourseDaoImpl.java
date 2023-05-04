@@ -24,6 +24,25 @@ public class CourseDaoImpl implements CourseDao {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Override
+    public Integer countCourse(CourseQueryParams courseQueryParams) {
+        String sql = "select count(*) from COURSE where 1=1 ";
+
+        Map<String, Object> map = new HashMap<>();
+
+        //查詢條件
+        if (courseQueryParams.getCategory() != null){
+            sql = sql + " and course_category_id = :courseCategory ";
+            map.put("courseCategory", courseQueryParams.getCategory().getCategoryId());
+        }
+        if(courseQueryParams.getSearch() != null){
+            sql = sql + " and course_name like :search ";
+            map.put("search", "%" + courseQueryParams.getSearch() + "%");
+        }
+        Integer total = namedParameterJdbcTemplate.queryForObject(sql, map, Integer.class);
+        return total;
+    }
+
+    @Override
     public List<CourseVo> getCourses(CourseQueryParams courseQueryParams) {
         String sql = "select course_id, course_name, course_category_id, course_detail, course_price, " +
                 " course_length, cooling_off_period, tea_id, course_total_rank, course_total_evaluate, " +
@@ -31,6 +50,7 @@ public class CourseDaoImpl implements CourseDao {
 
         Map<String, Object> map = new HashMap<>();
 
+        //查詢條件
         if (courseQueryParams.getCategory() != null){
             sql = sql + " and course_category_id = :courseCategory ";
             map.put("courseCategory", courseQueryParams.getCategory().getCategoryId());

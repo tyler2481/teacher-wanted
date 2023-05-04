@@ -17,6 +17,10 @@ public class CourseServiceImpl implements CourseService {
     private CourseDao courseDao;
 
     @Override
+    public Integer countCourse(CourseQueryParams courseQueryParams) {
+        return courseDao.countCourse(courseQueryParams);
+    }
+    @Override
     public List<CourseVo> getCourses(CourseQueryParams courseQueryParams) {
         return courseDao.getCourses(courseQueryParams);
     }
@@ -40,4 +44,6 @@ public class CourseServiceImpl implements CourseService {
     public void deleteCourseById(Integer courseId) {
         courseDao.deleteCourseById(courseId);
     }
+
+
 }

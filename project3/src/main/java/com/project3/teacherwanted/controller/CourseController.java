@@ -5,7 +5,10 @@ import com.project3.teacherwanted.dto.CourseQueryParams;
 import com.project3.teacherwanted.dto.CourseRequest;
 import com.project3.teacherwanted.model.CourseVo;
 import com.project3.teacherwanted.service.CourseService;
+import com.project3.teacherwanted.util.Page;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,13 +22,16 @@ public class CourseController {
     private CourseService courseService;
 
     @GetMapping("/courses")
-    public ResponseEntity<List<CourseVo>> getCourses(
+    public ResponseEntity<Page<CourseVo>> getCourses(
             //查詢條件
             @RequestParam (required = false) CourseCategory category,
             @RequestParam (required = false) String search,
             //排序
             @RequestParam (defaultValue = "create_time") String orderBy,
-            @RequestParam (defaultValue = "desc") String sort
+            @RequestParam (defaultValue = "desc") String sort,
+            //分頁
+            @RequestParam (defaultValue = "4") @Max(100) @Min(0)Integer limit,
+            @RequestParam (defaultValue = "0") @Min(0) Integer offset
             ){
         CourseQueryParams courseQueryParams = new CourseQueryParams();
         courseQueryParams.setCategory(category);
@@ -33,8 +39,20 @@ public class CourseController {
         courseQueryParams.setOrderBy(orderBy);
         courseQueryParams.setSort(sort);
 
+        //取得CourseList
         List<CourseVo> courseVoList = courseService.getCourses(courseQueryParams);
-        return ResponseEntity.status(HttpStatus.OK).body(courseVoList);
+
+        //取得Course總筆數
+        Integer total = courseService.countCourse(courseQueryParams);
+
+        //分頁
+        Page<CourseVo> page = new Page<>();
+        page.setLimit(limit);
+        page.setOffset(offset);
+        page.setTotal(total);
+        page.setResult(courseVoList);
+
+        return ResponseEntity.status(HttpStatus.OK).body(page);
     }
 
     @GetMapping("/courses/{courseId}")
