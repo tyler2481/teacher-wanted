@@ -19,6 +19,17 @@ import java.util.Map;
 public class CourseDaoImpl implements CourseDao {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    @Override
+    public List<CourseVo> getCourses() {
+        String sql = "select course_id, course_name, course_category_id, course_detail, course_price, " +
+                " course_length, cooling_off_period, tea_id, course_total_rank, course_total_evaluate, " +
+                " bought_count, course_remarks, course_status from COURSE ";
+
+        Map<String, Object> map = new HashMap<>();
+        List<CourseVo> courseVoList = namedParameterJdbcTemplate.query(sql, map, new CourseRowMapper());
+        return courseVoList;
+    }
     @Override
     public CourseVo getCourseById(Integer courseId) {
         String sql = "select course_id, course_name, course_category_id, course_detail, course_price, " +
@@ -36,11 +47,6 @@ public class CourseDaoImpl implements CourseDao {
             return null;
         }
 
-    }
-
-    @Override
-    public List<CourseVo> getCourses() {
-        return null;
     }
 
     @Override

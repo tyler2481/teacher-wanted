@@ -6,8 +6,8 @@ import com.project3.teacherwanted.model.CourseVo;
 import java.util.List;
 
 public interface CourseDao {
-    CourseVo getCourseById(Integer courseId);
     List<CourseVo> getCourses();
+    CourseVo getCourseById(Integer courseId);
 
     Integer createCourse(CourseRequest courseRequest);
 

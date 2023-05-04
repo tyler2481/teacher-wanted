@@ -9,10 +9,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class CourseController {
     @Autowired
     private CourseService courseService;
+
+    @GetMapping("/courses")
+    public ResponseEntity<List<CourseVo>> getCourses(){
+        List<CourseVo> courseVoList = courseService.getCourses();
+        return ResponseEntity.status(HttpStatus.OK).body(courseVoList);
+    }
 
     @GetMapping("/courses/{courseId}")
     public ResponseEntity<CourseVo> getCourseById(@PathVariable Integer courseId){

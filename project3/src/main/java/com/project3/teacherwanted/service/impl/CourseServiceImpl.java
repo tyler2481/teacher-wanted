@@ -7,10 +7,18 @@ import com.project3.teacherwanted.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class CourseServiceImpl implements CourseService {
     @Autowired
     private CourseDao courseDao;
+
+    @Override
+    public List<CourseVo> getCourses() {
+        return courseDao.getCourses();
+    }
+
     @Override
     public CourseVo getCourseById(Integer courseId) {
         return courseDao.getCourseById(courseId);
