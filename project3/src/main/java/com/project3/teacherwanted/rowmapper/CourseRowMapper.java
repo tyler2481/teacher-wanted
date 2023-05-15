@@ -1,7 +1,7 @@
 package com.project3.teacherwanted.rowmapper;
 
 
-import com.project3.teacherwanted.model.CourseVo;
+import com.project3.teacherwanted.model.vo.CourseVo;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

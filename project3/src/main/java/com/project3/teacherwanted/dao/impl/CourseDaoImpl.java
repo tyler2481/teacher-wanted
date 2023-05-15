@@ -1,10 +1,9 @@
 package com.project3.teacherwanted.dao.impl;
 
-import com.project3.teacherwanted.constant.CourseCategory;
 import com.project3.teacherwanted.dao.CourseDao;
-import com.project3.teacherwanted.dto.CourseQueryParams;
-import com.project3.teacherwanted.dto.CourseRequest;
-import com.project3.teacherwanted.model.CourseVo;
+import com.project3.teacherwanted.model.dto.CourseQueryParams;
+import com.project3.teacherwanted.model.dto.CourseRequest;
+import com.project3.teacherwanted.model.vo.CourseVo;
 import com.project3.teacherwanted.rowmapper.CourseRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -13,10 +12,15 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
+
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+
+
 
 @Component
 public class CourseDaoImpl implements CourseDao {
@@ -85,7 +89,7 @@ public class CourseDaoImpl implements CourseDao {
     }
 
     @Override
-    public Integer createCourse(CourseRequest courseRequest) {
+    public Integer createCourse(CourseRequest courseRequest) throws IOException {
         String sql = "insert into COURSE(course_name, course_category_id, course_detail, course_price, " +
                      " course_length, cooling_off_period, tea_id, course_total_rank, course_total_evaluate, " +
                      " bought_count, course_remarks, course_status, create_time, update_time) " +
@@ -115,6 +119,7 @@ public class CourseDaoImpl implements CourseDao {
 
         return courseId;
     }
+
 
     @Override
     public void updateCourse(Integer courseId, CourseRequest courseRequest) {

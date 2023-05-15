@@ -1,9 +1,9 @@
 package com.project3.teacherwanted.controller;
 
 import com.project3.teacherwanted.constant.CourseCategory;
-import com.project3.teacherwanted.dto.CourseQueryParams;
-import com.project3.teacherwanted.dto.CourseRequest;
-import com.project3.teacherwanted.model.CourseVo;
+import com.project3.teacherwanted.model.dto.CourseQueryParams;
+import com.project3.teacherwanted.model.dto.CourseRequest;
+import com.project3.teacherwanted.model.vo.CourseVo;
 import com.project3.teacherwanted.service.CourseService;
 import com.project3.teacherwanted.util.Page;
 import jakarta.validation.Valid;
@@ -12,14 +12,25 @@ import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
+import java.io.IOException;
 import java.util.List;
 
-@RestController
+@Controller
+//@RequestMapping("/CourseAll")
 public class CourseController {
     @Autowired
     private CourseService courseService;
+
+    @GetMapping("/Courses")
+    public String getPage(Model model) {
+        model.addAttribute("title", "My Page");
+        return "Courses"; // 課程首頁
+    }
 
     @GetMapping("/courses")
     public ResponseEntity<Page<CourseVo>> getCourses(
@@ -67,7 +78,7 @@ public class CourseController {
     }
 
     @PostMapping("/courses")
-    public ResponseEntity<CourseVo> createCourse(@RequestBody @Valid CourseRequest courseRequest){
+    public ResponseEntity<CourseVo> createCourse(@RequestBody @Valid CourseRequest courseRequest) throws IOException {
         Integer courseId = courseService.createCourse(courseRequest);
         CourseVo courseVo = courseService.getCourseById(courseId);
         return ResponseEntity.status(HttpStatus.CREATED).body(courseVo);

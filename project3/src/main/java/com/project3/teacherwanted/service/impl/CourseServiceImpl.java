@@ -1,14 +1,14 @@
 package com.project3.teacherwanted.service.impl;
 
-import com.project3.teacherwanted.constant.CourseCategory;
 import com.project3.teacherwanted.dao.CourseDao;
-import com.project3.teacherwanted.dto.CourseQueryParams;
-import com.project3.teacherwanted.dto.CourseRequest;
-import com.project3.teacherwanted.model.CourseVo;
+import com.project3.teacherwanted.model.dto.CourseQueryParams;
+import com.project3.teacherwanted.model.dto.CourseRequest;
+import com.project3.teacherwanted.model.vo.CourseVo;
 import com.project3.teacherwanted.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.List;
 
 @Component
@@ -31,7 +31,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Integer createCourse(CourseRequest courseRequest) {
+    public Integer createCourse(CourseRequest courseRequest) throws IOException {
         return courseDao.createCourse(courseRequest);
     }
 

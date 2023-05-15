@@ -1,10 +1,10 @@
 package com.project3.teacherwanted.dao;
 
-import com.project3.teacherwanted.constant.CourseCategory;
-import com.project3.teacherwanted.dto.CourseQueryParams;
-import com.project3.teacherwanted.dto.CourseRequest;
-import com.project3.teacherwanted.model.CourseVo;
+import com.project3.teacherwanted.model.dto.CourseQueryParams;
+import com.project3.teacherwanted.model.dto.CourseRequest;
+import com.project3.teacherwanted.model.vo.CourseVo;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface CourseDao {
@@ -12,7 +12,7 @@ public interface CourseDao {
     List<CourseVo> getCourses(CourseQueryParams courseQueryParams);
     CourseVo getCourseById(Integer courseId);
 
-    Integer createCourse(CourseRequest courseRequest);
+    Integer createCourse(CourseRequest courseRequest) throws IOException;
 
     void updateCourse(Integer courseId, CourseRequest courseRequest);
 
