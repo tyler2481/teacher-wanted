@@ -1,148 +1,49 @@
 package com.project3.teacherwanted.model.vo;
 
+import com.project3.teacherwanted.constant.CourseCategory;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.Date;
 
-//@Data
+@Data
+@Entity
+@Table(name = "COURSE")
 public class CourseVo {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "course_id")
     Integer courseId;
+    @Column(name = "course_name")
     String courseName;
+    @Column(name = "course_category_id")
     Integer courseCategoryId;
+    @Column(name = "course_detail")
     String courseDetail;
+    @Column(name = "course_price")
     Integer coursePrice;
+    @Column(name = "course_length")
     Double courseLength;
+    @Column(name = "cooling_off_period")
     Integer coolingOffPeriod;
+    @Column(name = "tea_id")
     Integer teaId;
+    @Column(name = "course_total_rank")
     Integer courseTotalRank;
+    @Column(name = "course_total_evaluate")
     Integer courseTotalEvaluate;
+    @Column(name = "bought_count")
     Integer boughtCount;
+    @Column(name = "course_remarks")
     String courseRemarks;
+    @Column(name = "course_status")
     Integer courseStatus;
+    @Column(name = "create_time")
     Date createTime;
+    @Column(name = "update_time")
     Date updateTime;
+    @Column(name = "course_photo")
+    byte[] coursePhoto;
 
-    public CourseVo() {
-    }
-
-    public Integer getCourseId() {
-        return courseId;
-    }
-
-    public void setCourseId(Integer courseId) {
-        this.courseId = courseId;
-    }
-
-    public String getCourseName() {
-        return courseName;
-    }
-
-    public void setCourseName(String courseName) {
-        this.courseName = courseName;
-    }
-
-    public Integer getCourseCategoryId() {
-        return courseCategoryId;
-    }
-
-    public void setCourseCategoryId(Integer courseCategoryId) {
-        this.courseCategoryId = courseCategoryId;
-    }
-
-    public String getCourseDetail() {
-        return courseDetail;
-    }
-
-    public void setCourseDetail(String courseDetail) {
-        this.courseDetail = courseDetail;
-    }
-
-    public Integer getCoursePrice() {
-        return coursePrice;
-    }
-
-    public void setCoursePrice(Integer coursePrice) {
-        this.coursePrice = coursePrice;
-    }
-
-    public Double getCourseLength() {
-        return courseLength;
-    }
-
-    public void setCourseLength(Double courseLength) {
-        this.courseLength = courseLength;
-    }
-
-    public Integer getCoolingOffPeriod() {
-        return coolingOffPeriod;
-    }
-
-    public void setCoolingOffPeriod(Integer coolingOffPeriod) {
-        this.coolingOffPeriod = coolingOffPeriod;
-    }
-
-    public Integer getTeaId() {
-        return teaId;
-    }
-
-    public void setTeaId(Integer teaId) {
-        this.teaId = teaId;
-    }
-
-    public Integer getCourseTotalRank() {
-        return courseTotalRank;
-    }
-
-    public void setCourseTotalRank(Integer courseTotalRank) {
-        this.courseTotalRank = courseTotalRank;
-    }
-
-    public Integer getCourseTotalEvaluate() {
-        return courseTotalEvaluate;
-    }
-
-    public void setCourseTotalEvaluate(Integer courseTotalEvaluate) {
-        this.courseTotalEvaluate = courseTotalEvaluate;
-    }
-
-    public Integer getBoughtCount() {
-        return boughtCount;
-    }
-
-    public void setBoughtCount(Integer boughtCount) {
-        this.boughtCount = boughtCount;
-    }
-
-    public String getCourseRemarks() {
-        return courseRemarks;
-    }
-
-    public void setCourseRemarks(String courseRemarks) {
-        this.courseRemarks = courseRemarks;
-    }
-
-    public Integer getCourseStatus() {
-        return courseStatus;
-    }
-
-    public void setCourseStatus(Integer courseStatus) {
-        this.courseStatus = courseStatus;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
 
 }

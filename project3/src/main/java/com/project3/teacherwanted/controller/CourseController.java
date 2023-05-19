@@ -1,5 +1,6 @@
 package com.project3.teacherwanted.controller;
 
+import com.project3.teacherwanted.constant.Category;
 import com.project3.teacherwanted.constant.CourseCategory;
 import com.project3.teacherwanted.model.dto.CourseQueryParams;
 import com.project3.teacherwanted.model.dto.CourseRequest;
@@ -33,40 +34,47 @@ public class CourseController {
     }
 
     @GetMapping("/courses")
-    public ResponseEntity<Page<CourseVo>> getCourses(
+    public ResponseEntity<List<CourseVo>> getCourses(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "4") int pageSize,
             //查詢條件
             @RequestParam (required = false) CourseCategory category,
-            @RequestParam (required = false) String search,
-            //排序
-            @RequestParam (defaultValue = "create_time") String orderBy,
-            @RequestParam (defaultValue = "desc") String sort,
-            //分頁
-            @RequestParam (defaultValue = "4") @Max(100) @Min(0)Integer limit,
-            @RequestParam (defaultValue = "0") @Min(0) Integer offset
-            ){
-        CourseQueryParams courseQueryParams = new CourseQueryParams();
-        courseQueryParams.setCategory(category);
-        courseQueryParams.setSearch(search);
-        courseQueryParams.setOrderBy(orderBy);
-        courseQueryParams.setSort(sort);
-
+            @RequestParam (required = false) String keyword
+            ) {
+        Integer courseCategoryId = null;
+        if (category != null) {
+            courseCategoryId = category.getCategoryId();
+            List<CourseVo> courseVoList = courseService.getCourses(page, pageSize, courseCategoryId, keyword);
+            return new ResponseEntity<>(courseVoList, HttpStatus.OK);
+        }
         //取得CourseList
-        List<CourseVo> courseVoList = courseService.getCourses(courseQueryParams);
+        List<CourseVo> courseVoList = courseService.getCourses(page, pageSize, courseCategoryId, keyword);
 
-        //取得Course總筆數
-        Integer total = courseService.countCourse(courseQueryParams);
+        return new ResponseEntity<>(courseVoList, HttpStatus.OK);
 
-        //分頁
-        Page<CourseVo> page = new Page<>();
-        page.setLimit(limit);
-        page.setOffset(offset);
-        page.setTotal(total);
-        page.setResult(courseVoList);
+    }
+    @GetMapping("/courses/{keyword}")
+    public ResponseEntity<List<CourseVo>> getCoursesByKeyword(@PathVariable String keyword){
+        List<CourseVo> courseVoList = courseService.getCoursesByKeyword(keyword);
 
-        return ResponseEntity.status(HttpStatus.OK).body(page);
+        if(courseVoList != null){
+            return ResponseEntity.status(HttpStatus.OK).body(courseVoList);
+        }else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+    @GetMapping("/TeacherCourses/{teaId}")
+    public ResponseEntity<List<CourseVo>> getCoursesByTeacher(@PathVariable Integer teaId){
+        List<CourseVo> courseVoList = courseService.getCoursesByTeacher(teaId);
+
+        if(courseVoList != null){
+            return ResponseEntity.status(HttpStatus.OK).body(courseVoList);
+        }else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
-    @GetMapping("/courses/{courseId}")
+    @GetMapping("/course/{courseId}")
     public ResponseEntity<CourseVo> getCourseById(@PathVariable Integer courseId){
         CourseVo courseVo = courseService.getCourseById(courseId);
 
@@ -78,10 +86,10 @@ public class CourseController {
     }
 
     @PostMapping("/courses")
-    public ResponseEntity<CourseVo> createCourse(@RequestBody @Valid CourseRequest courseRequest) throws IOException {
-        Integer courseId = courseService.createCourse(courseRequest);
-        CourseVo courseVo = courseService.getCourseById(courseId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(courseVo);
+    public ResponseEntity<CourseVo> createCourse(@RequestBody @Valid CourseVo courseVo) throws IOException {
+        Integer courseId = courseService.createCourse(courseVo);
+        CourseVo courseVoReturn = courseService.getCourseById(courseId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(courseVoReturn);
     }
 
     @PutMapping("/courses/{courseId}")

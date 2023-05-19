@@ -10,7 +10,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     //允許外部請求
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/courses/**")
+        registry.addMapping("/**")
                 .allowedOriginPatterns("*")
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowedHeaders("Content-Type")

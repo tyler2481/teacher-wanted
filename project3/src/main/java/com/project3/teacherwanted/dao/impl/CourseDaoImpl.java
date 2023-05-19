@@ -1,171 +1,98 @@
 package com.project3.teacherwanted.dao.impl;
 
 import com.project3.teacherwanted.dao.CourseDao;
-import com.project3.teacherwanted.model.dto.CourseQueryParams;
 import com.project3.teacherwanted.model.dto.CourseRequest;
 import com.project3.teacherwanted.model.vo.CourseVo;
-import com.project3.teacherwanted.rowmapper.CourseRowMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Component;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import org.hibernate.Session;
+import org.hibernate.query.Query;
+import org.springframework.stereotype.Repository;
 
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
-
-
-@Component
+@Repository
 public class CourseDaoImpl implements CourseDao {
-    @Autowired
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    @PersistenceContext
+    private Session session;
 
     @Override
-    public Integer countCourse(CourseQueryParams courseQueryParams) {
-        String sql = "select count(*) from COURSE where 1=1 ";
+    public List<CourseVo> getCourses(int page, int pageSize, Integer courseCategoryId, String keyword) {
+        String hql = "FROM CourseVo";
 
-        Map<String, Object> map = new HashMap<>();
+        // 根据查询条件构建查询语句
+        if (courseCategoryId != null || keyword != null) {
+            hql += " WHERE";
+            if (courseCategoryId != null) {
+                hql += " courseCategoryId = :courseCategoryId";
+            }
+            if (keyword != null) {
+                if (courseCategoryId != null) {
+                    hql += " AND";
+                }
+                hql += " (courseName LIKE :keyword OR courseDetail LIKE :keyword)";
+            }
+        }
 
-        //查詢條件
-        sql = addFilteringSql(sql, map, courseQueryParams);
-//        if (courseQueryParams.getCategory() != null){
-//            sql = sql + " and course_category_id = :courseCategory ";
-//            map.put("courseCategory", courseQueryParams.getCategory().getCategoryId());
-//        }
-//        if(courseQueryParams.getSearch() != null){
-//            sql = sql + " and course_name like :search ";
-//            map.put("search", "%" + courseQueryParams.getSearch() + "%");
-//        }
-        Integer total = namedParameterJdbcTemplate.queryForObject(sql, map, Integer.class);
-        return total;
+        // 创建查询对象
+        Query<CourseVo> query = session.createQuery(hql, CourseVo.class);
+
+        // 设置查询参数
+        if (courseCategoryId != null) {
+            query.setParameter("courseCategoryId", courseCategoryId);
+        }
+        if (keyword != null) {
+            query.setParameter("keyword", "%" + keyword + "%");
+        }
+
+        // 分页查询
+        query.setFirstResult((page - 1) * pageSize);
+        query.setMaxResults(pageSize);
+
+        // 执行查询并返回结果
+        List<CourseVo> courseList = query.getResultList();
+        return courseList;
     }
 
-    @Override
-    public List<CourseVo> getCourses(CourseQueryParams courseQueryParams) {
-        String sql = "select course_id, course_name, course_category_id, course_detail, course_price, " +
-                " course_length, cooling_off_period, tea_id, course_total_rank, course_total_evaluate, " +
-                " bought_count, course_remarks, course_status, create_time, update_time from COURSE where 1=1 ";
-
-        Map<String, Object> map = new HashMap<>();
-
-        //查詢條件
-        if (courseQueryParams.getCategory() != null){
-            sql = sql + " and course_category_id = :courseCategory ";
-            map.put("courseCategory", courseQueryParams.getCategory().getCategoryId());
-        }
-        if(courseQueryParams.getSearch() != null){
-            sql = sql + " and course_name like :search ";
-            map.put("search", "%" + courseQueryParams.getSearch() + "%");
-        }
-        sql = sql + " order by " + courseQueryParams.getOrderBy() + " " + courseQueryParams.getSort();
-
-        List<CourseVo> courseVoList = namedParameterJdbcTemplate.query(sql, map, new CourseRowMapper());
-        return courseVoList;
-    }
     @Override
     public CourseVo getCourseById(Integer courseId) {
-        String sql = "select course_id, course_name, course_category_id, course_detail, course_price, " +
-                " course_length, cooling_off_period, tea_id, course_total_rank, course_total_evaluate, " +
-                " bought_count, course_remarks, course_status, create_time, update_time from COURSE where course_id = :courseId";
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("courseId", courseId);
-
-
-        List<CourseVo> courseVoList = namedParameterJdbcTemplate.query(sql, map, new CourseRowMapper());
-        if (courseVoList.size() > 0){
-            return courseVoList.get(0);
-        }else{
-            return null;
-        }
-
+        return session.find(CourseVo.class, courseId);
+    }
+    @Override
+    public List<CourseVo> getCoursesByKeyword(String keyword) {
+        String hql = "FROM CourseVo WHERE courseName LIKE :keyword";
+        TypedQuery<CourseVo> query = session.createQuery(hql, CourseVo.class);
+        query.setParameter("keyword", "%" + keyword + "%");
+        return query.getResultList();
     }
 
     @Override
-    public Integer createCourse(CourseRequest courseRequest) throws IOException {
-        String sql = "insert into COURSE(course_name, course_category_id, course_detail, course_price, " +
-                     " course_length, cooling_off_period, tea_id, course_total_rank, course_total_evaluate, " +
-                     " bought_count, course_remarks, course_status, create_time, update_time) " +
-                     " values (:courseName, :courseCategoryId, :courseDetail, :coursePrice, :courseLength,  :coolingOffPeriod, " +
-                     " :teaId, :courseTotalRank, :courseTotalEvaluate, :boughtCount, :courseRemarks, :courseStatus, :createTime, :updateTime)";
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("courseName", courseRequest.getCourseName());
-        map.put("courseCategoryId", courseRequest.getCourseCategoryId());
-        map.put("courseDetail", courseRequest.getCourseDetail());
-        map.put("coursePrice", courseRequest.getCoursePrice());
-        map.put("courseLength", courseRequest.getCourseLength());
-        map.put("coolingOffPeriod", courseRequest.getCoolingOffPeriod());
-        map.put("teaId", courseRequest.getTeaId());
-        map.put("courseTotalRank", courseRequest.getCourseTotalRank());
-        map.put("courseTotalEvaluate", courseRequest.getCourseTotalEvaluate());
-        map.put("boughtCount", courseRequest.getBoughtCount());
-        map.put("courseRemarks", courseRequest.getCourseRemarks());
-        map.put("courseStatus", courseRequest.getCourseStatus());
-        map.put("createTime", new Date());
-        map.put("updateTime", new Date());
-
-
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        namedParameterJdbcTemplate.update(sql, new MapSqlParameterSource(map), keyHolder);
-        int courseId = keyHolder.getKey().intValue();
-
-        return courseId;
+    public List<CourseVo> getCoursesByTeacher(Integer teaId) {
+        String hql = "FROM CourseVo WHERE teaId = :teaId";
+        TypedQuery<CourseVo> query = session.createQuery(hql, CourseVo.class);
+        query.setParameter("teaId", teaId );
+        return query.getResultList();
     }
 
+    @Override
+    public Integer createCourse(CourseVo courseVo) throws IOException {
+        session.persist(courseVo);
+        session.flush();
+        Integer primaryKey = courseVo.getCourseId();
+        return primaryKey;
+    }
 
     @Override
     public void updateCourse(Integer courseId, CourseRequest courseRequest) {
-        String sql ="update COURSE set course_name = :courseName, course_category_id = :courseCategoryId, course_detail = :courseDetail, " +
-                " course_price = :coursePrice, course_length = :courseLength, cooling_off_period = :coolingOffPeriod, course_total_rank = :courseTotalRank, " +
-                " course_total_evaluate = :courseTotalEvaluate, bought_count = :boughtCount, course_remarks = :courseRemarks, course_status = :courseStatus, update_time = :updateTime " +
-                " where course_id = :courseId";
 
-        Map<String, Object> map =new HashMap<>() ;
-        map.put("courseId", courseId);
-        map.put("courseName", courseRequest.getCourseName());
-        map.put("courseCategoryId", courseRequest.getCourseCategoryId());
-        map.put("courseDetail", courseRequest.getCourseDetail());
-        map.put("coursePrice", courseRequest.getCoursePrice());
-        map.put("courseLength", courseRequest.getCourseLength());
-        map.put("coolingOffPeriod", courseRequest.getCoolingOffPeriod());
-        map.put("courseTotalRank", courseRequest.getCourseTotalRank());
-        map.put("courseTotalEvaluate", courseRequest.getCourseTotalEvaluate());
-        map.put("boughtCount", courseRequest.getBoughtCount());
-        map.put("courseRemarks", courseRequest.getCourseRemarks());
-        map.put("courseStatus", courseRequest.getCourseStatus());
-        map.put("updateDate", new Date());
-
-        namedParameterJdbcTemplate.update(sql, map);
     }
 
     @Override
     public void deleteCourseById(Integer courseId) {
-        String sql = "delete from COURSE where course_id = :courseId";
-
-        Map<String, Object> map =new HashMap<>() ;
-
-        map.put("courseId", courseId);
-        namedParameterJdbcTemplate.update(sql, map);
-    }
-
-    private String addFilteringSql(String sql, Map<String, Object> map, CourseQueryParams courseQueryParams) {
-        //查詢條件
-        if (courseQueryParams.getCategory() != null) {
-            sql = sql + " and course_category_id = :courseCategory ";
-            map.put("courseCategory", courseQueryParams.getCategory().getCategoryId());
-        }
-        if (courseQueryParams.getSearch() != null) {
-            sql = sql + " and course_name like :search ";
-            map.put("search", "%" + courseQueryParams.getSearch() + "%");
-        }
-        return sql;
+        session.remove(getCourseById(courseId));
     }
 }

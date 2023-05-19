@@ -1,15 +1,15 @@
 package com.project3.teacherwanted.constant;
 
-public enum CourseCategory {
-    LANGUAGE("語言", 1),
-    LIFE("生活", 2),
-    PROGRAMMING("程式語言", 3),
-    GAME("電競", 4),;
+public enum Category {
+    COURSE("課程", 1),
+    ACTIVITY("活動", 2),
+    SHOP("商城", 3),
+    WISH("許願", 4),;
 
     private String categoryName;
     private int categoryId;
 
-    CourseCategory(String categoryName, int categoryId) {
+    Category(String categoryName, int categoryId) {
         this.categoryName = categoryName;
         this.categoryId = categoryId;
     }

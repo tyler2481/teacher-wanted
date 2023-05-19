@@ -22,6 +22,18 @@ public class MemberController {
         }
     }
 
+//    @GetMapping("/members/{id}")
+//    public MemberVo getMemberById(@PathVariable Integer id) {
+//        MemberVo member = memberService.findById(id);
+//        if (member != null) {
+//            System.out.println("OK");
+//            return member;
+//        } else {
+//            System.out.println("null");
+//            return null;
+//        }
+//    }
+
     @GetMapping("/members/account/{account}")
     public ResponseEntity<MemberVo> getMemberByAccount(@PathVariable String account) {
         MemberVo member = memberService.findByAccount(account);
