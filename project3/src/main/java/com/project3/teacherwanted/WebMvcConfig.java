@@ -1,4 +1,4 @@
-package com.project3.teacherwanted.util;
+package com.project3.teacherwanted;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

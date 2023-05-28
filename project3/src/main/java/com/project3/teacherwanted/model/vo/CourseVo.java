@@ -20,6 +20,8 @@ public class CourseVo {
     Integer courseCategoryId;
     @Column(name = "course_detail")
     String courseDetail;
+    @Column(name = "course_pre")
+    String coursePre;
     @Column(name = "course_price")
     Integer coursePrice;
     @Column(name = "course_length")
@@ -42,8 +44,12 @@ public class CourseVo {
     Date createTime;
     @Column(name = "update_time")
     Date updateTime;
-    @Column(name = "course_photo")
-    byte[] coursePhoto;
+    @Column(name = "course_photo1")
+    byte[] coursePhoto1;
+    @Column(name = "course_photo2")
+    byte[] coursePhoto2;
+    @Column(name = "course_photo3")
+    byte[] coursePhoto3;
 
 
 }

@@ -20,9 +20,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
-@Controller
-//@RequestMapping("/CourseAll")
+@RestController
 public class CourseController {
     @Autowired
     private CourseService courseService;
@@ -64,11 +64,19 @@ public class CourseController {
         }
     }
     @GetMapping("/TeacherCourses/{teaId}")
-    public ResponseEntity<List<CourseVo>> getCoursesByTeacher(@PathVariable Integer teaId){
-        List<CourseVo> courseVoList = courseService.getCoursesByTeacher(teaId);
+    public ResponseEntity<Map<String, Object>> getCoursesByTeacher(
+            @PathVariable Integer teaId,
+            //分頁
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "5") int pageSize,
+            //查詢條件
+            @RequestParam (required = false) Integer courseCategoryId,
+            @RequestParam (required = false) String keyword){
 
-        if(courseVoList != null){
-            return ResponseEntity.status(HttpStatus.OK).body(courseVoList);
+        Map<String, Object> result = courseService.getCoursesByTeacher(teaId, page, pageSize, courseCategoryId, keyword);
+
+        if(result != null){
+            return ResponseEntity.status(HttpStatus.OK).body(result);
         }else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

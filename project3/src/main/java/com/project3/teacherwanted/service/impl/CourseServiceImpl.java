@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -41,8 +42,8 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<CourseVo> getCoursesByTeacher(Integer teaId) {
-        return courseDao.getCoursesByTeacher(teaId);
+    public Map<String, Object> getCoursesByTeacher(Integer teaId, int page, int pageSize, Integer courseCategoryId, String keyword) {
+        return courseDao.getCoursesByTeacher(teaId, page, pageSize, courseCategoryId, keyword);
     }
 
     @Override

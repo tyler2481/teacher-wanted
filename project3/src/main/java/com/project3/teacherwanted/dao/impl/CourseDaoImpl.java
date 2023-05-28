@@ -11,7 +11,9 @@ import org.springframework.stereotype.Repository;
 
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Repository
@@ -71,11 +73,39 @@ public class CourseDaoImpl implements CourseDao {
     }
 
     @Override
-    public List<CourseVo> getCoursesByTeacher(Integer teaId) {
+    public Map<String, Object> getCoursesByTeacher(Integer teaId, int page, int pageSize, Integer courseCategoryId, String keyword) {
         String hql = "FROM CourseVo WHERE teaId = :teaId";
+        if (courseCategoryId != null) {
+            hql += " AND courseCategoryId = :courseCategoryId";
+        }
+
+        if (keyword != null && !keyword.isEmpty()) {
+            hql += " AND courseName LIKE :keyword";
+        }
+
+        hql += " ORDER BY courseId DESC"; // 按照 courseId 降序排序
+
         TypedQuery<CourseVo> query = session.createQuery(hql, CourseVo.class);
-        query.setParameter("teaId", teaId );
-        return query.getResultList();
+        query.setParameter("teaId", teaId);
+
+        if (courseCategoryId != null) {
+            query.setParameter("courseCategoryId", courseCategoryId);
+        }
+
+        if (keyword != null && !keyword.isEmpty()) {
+            query.setParameter("keyword", "%" + keyword + "%");
+        }
+        int totalCount = query.getResultList().size();
+
+        int offset = (page - 1) * pageSize;
+        query.setFirstResult(offset);
+        query.setMaxResults(pageSize);
+        List<CourseVo> courseVoList = query.getResultList();
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("courses", courseVoList);
+        result.put("total", totalCount);
+        return result;
     }
 
     @Override
@@ -88,7 +118,9 @@ public class CourseDaoImpl implements CourseDao {
 
     @Override
     public void updateCourse(Integer courseId, CourseRequest courseRequest) {
-
+        CourseVo courseVo = session.find(CourseVo.class, courseId);
+        courseVo.setCourseStatus(courseRequest.getCourseStatus());
+        session.merge(courseVo);
     }
 
     @Override

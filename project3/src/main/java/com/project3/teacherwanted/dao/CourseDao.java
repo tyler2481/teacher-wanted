@@ -8,6 +8,7 @@ import com.project3.teacherwanted.model.vo.CourseVo;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public interface CourseDao {
 //    Integer countCourse(CourseQueryParams courseQueryParams);
@@ -15,7 +16,7 @@ public interface CourseDao {
     CourseVo getCourseById(Integer courseId);
 
     List<CourseVo> getCoursesByKeyword(String keyword);
-    List<CourseVo> getCoursesByTeacher(Integer teaId);
+    Map<String, Object> getCoursesByTeacher(Integer teaId, int page, int pageSize, Integer courseCategoryId, String keyword);
 
     Integer createCourse(CourseVo courseVo) throws IOException;
 
