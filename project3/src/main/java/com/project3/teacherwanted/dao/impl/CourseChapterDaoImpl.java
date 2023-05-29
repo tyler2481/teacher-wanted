@@ -40,10 +40,11 @@ public class CourseChapterDaoImpl implements CourseChapterDao{
     }
 
     @Override
-    public void deleteCourseById(Integer courseId) {
-        CourseChapterVo chapterVo = session.find(CourseChapterVo.class, courseId);
-        if (chapterVo != null) {
-            session.remove(chapterVo);
-        }
+    public Integer deleteChaptersById(Integer courseId) {
+        String hql = "DELETE FROM CourseChapterVo WHERE courseId = :courseId";
+        Query query = session.createQuery(hql);
+        query.setParameter("courseId", courseId);
+        int deletedCount = query.executeUpdate();
+        return deletedCount;
     }
 }

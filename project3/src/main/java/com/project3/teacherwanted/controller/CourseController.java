@@ -30,7 +30,7 @@ public class CourseController {
     @GetMapping("/Courses")
     public String getPage(Model model) {
         model.addAttribute("title", "My Page");
-        return "Courses"; // 課程首頁
+        return "CourseVue"; // 課程首頁
     }
 
     @GetMapping("/courses")

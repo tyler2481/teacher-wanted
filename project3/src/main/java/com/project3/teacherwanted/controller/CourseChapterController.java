@@ -47,39 +47,6 @@ public class CourseChapterController {
         }
     }
 
-
-//    @PostMapping("/chapters")
-//    public ResponseEntity<List<CourseChapterVo>> createChapters(@RequestBody List<CourseChapterVo> chapterVoList) throws IOException {
-//        List<CourseChapterVo> createdChapterVoList = new ArrayList<>();
-//
-//        for (CourseChapterVo chapterVo : chapterVoList) {
-//            MultipartFile chapterPhotoFile = chapterVo.getChapterPhoto();
-//            MultipartFile chapterFile = chapterVo.getChapterFile();
-//
-//            // 处理章节照片
-//            if (chapterPhotoFile != null && !chapterPhotoFile.isEmpty()) {
-//                byte[] chapterPhotoData = chapterPhotoFile.getBytes();
-//                chapterVo.setChapterPhoto(chapterPhotoData);
-//            }
-//
-//            // 处理章节文件
-//            if (chapterFile != null && !chapterFile.isEmpty()) {
-//                byte[] chapterFileData = chapterFile.getBytes();
-//                chapterVo.setChapterFile(chapterFileData);
-//            }
-//
-//            // 创建章节并获取章节ID
-//            Integer chapterId = courseChapterService.createChapters(chapterVo);
-//
-//            // 创建成功后返回包含章节信息的响应体
-//            chapterVo.setChapterId(chapterId);
-//            createdChapterVoList.add(chapterVo);
-//        }
-//
-//        return ResponseEntity.status(HttpStatus.CREATED).body(createdChapterVoList);
-//    }
-
-
     @PostMapping(value = "/chapters", consumes = "multipart/form-data")
     public ResponseEntity<?> createChapters(@RequestPart(value = "chapterFile", required = false) List<MultipartFile> chapterFiles,
                                             @RequestParam("chapterOrder") List<String> chapterOrders,
@@ -192,8 +159,8 @@ public class CourseChapterController {
     }
 
     @DeleteMapping("/chapters/{courseId}")
-    public ResponseEntity<Object> deleteCourse(@PathVariable Integer courseId){
-        courseChapterService.deleteCourseById(courseId);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    public ResponseEntity<Object> deleteChaptersById(@PathVariable Integer courseId){
+        Integer deletedCount = courseChapterService.deleteChaptersById(courseId);
+        return ResponseEntity.status(HttpStatus.OK).body(deletedCount);
     }
 }

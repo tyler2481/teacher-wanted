@@ -35,7 +35,7 @@ public class CourseChapterServiceImpl implements CourseChapterService {
     }
 
     @Override
-    public void deleteCourseById(Integer courseId) {
-        courseChapterDao.deleteCourseById(courseId);
+    public Integer deleteChaptersById(Integer courseId) {
+        return courseChapterDao.deleteChaptersById(courseId);
     }
 }
