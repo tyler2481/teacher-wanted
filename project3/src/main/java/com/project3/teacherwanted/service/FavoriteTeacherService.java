@@ -10,5 +10,7 @@ public interface FavoriteTeacherService {
     List<FavoriteTeacherVo> findAll();
     FavoriteTeacherVo getFavTeacherById(Integer id);
     void createFavTeacher(FavoriteTeacherVo favoriteTeacher);
-    void deleteFavTeacher(Integer id);
+    void deleteFavTeacher(Integer memId, Integer teaId);
+
+    int checkFavTeacher(Integer memId, Integer teaId);
 }

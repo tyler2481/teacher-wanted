@@ -7,6 +7,8 @@ import java.util.List;
 public interface FavoriteCourseDao {
     List<FavoriteCourseVo> findAll();
     FavoriteCourseVo getFavCourseById(Integer id);
+    int checkFavCourse(Integer memId, Integer courseId);
     void createFavCourse(FavoriteCourseVo favoriteCourse);
-    void deleteFavCourse(Integer id);
+    void deleteFavCourse(Integer memId, Integer courseId);
+
 }

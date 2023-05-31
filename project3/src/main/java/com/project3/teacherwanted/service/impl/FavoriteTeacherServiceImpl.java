@@ -4,12 +4,14 @@ import com.project3.teacherwanted.dao.FavoriteTeacherDao;
 import com.project3.teacherwanted.model.vo.FavoriteCourseVo;
 import com.project3.teacherwanted.model.vo.FavoriteTeacherVo;
 import com.project3.teacherwanted.service.FavoriteTeacherService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class FavoriteTeacherServiceImpl implements FavoriteTeacherService {
     @Autowired
     private FavoriteTeacherDao favoriteTeacherDao;
@@ -29,7 +31,12 @@ public class FavoriteTeacherServiceImpl implements FavoriteTeacherService {
     }
 
     @Override
-    public void deleteFavTeacher(Integer id) {
-        favoriteTeacherDao.deleteFavTeacher(id);
+    public void deleteFavTeacher(Integer memId, Integer teaId) {
+        favoriteTeacherDao.deleteFavTeacher(memId, teaId);
+    }
+
+    @Override
+    public int checkFavTeacher(Integer memId, Integer teaId) {
+        return favoriteTeacherDao.checkFavTeacher(memId, teaId);
     }
 }

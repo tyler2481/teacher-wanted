@@ -27,6 +27,12 @@ public class FavoriteCourseController {
         return new ResponseEntity<>(favoriteCourse, HttpStatus.OK);
     }
 
+    @GetMapping("/favcourses/{memId}/{courseId}")
+    public int checkFavCourse(@PathVariable("memId") Integer memId, @PathVariable("courseId") Integer courseId) {
+        int result = favoriteCourseService.checkFavCourse(memId, courseId);
+        return result;
+    }
+
     @PostMapping("/favcourses")
     public ResponseEntity<Void> createFavCourse(@RequestBody @Valid FavoriteCourseVo favoriteCourse) {
         favoriteCourseService.createFavCourse(favoriteCourse);
@@ -34,9 +40,9 @@ public class FavoriteCourseController {
     }
 
 
-    @DeleteMapping("/favcourses/{id}")
-    public ResponseEntity<Void> deleteFavCourse(@PathVariable("id") Integer id) {
-        favoriteCourseService.deleteFavCourse(id);
+    @DeleteMapping("/favcourses/{memId}/{courseId}")
+    public ResponseEntity<Void> deleteFavCourse(@PathVariable("memId") Integer memId, @PathVariable("courseId") Integer courseId) {
+        favoriteCourseService.deleteFavCourse(memId, courseId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

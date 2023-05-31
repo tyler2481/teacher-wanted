@@ -198,14 +198,18 @@
 
                   <!-- 分享和收藏 -->
                   <li class="forHorizontalCenterFlex intdroucePadding">
-                    <div class="share">
-                      <button class="btn">
-                        <img src="../img/base/cards-heart.svg" alt="" />
-                        收藏
-                      </button>
-                      <button class="btn">
-                        <img src="../img/base/share.svg" alt="" />分享
-                      </button>
+<!--                    <div>-->
+<!--                      <button type="button" class="btn btn-success" style="width: 90px"><img src="../img/base/cards-heart.svg" alt="" />收藏</button>-->
+<!--                      <button type="button" class="btn btn-success" style="width: 90px"><img src="../img/base/share.svg" alt="" />分享</button>-->
+<!--                    </div>-->
+                    <div class="button-container" style="display: flex;justify-content: center;/">
+                      <div v-if="this.fav === 0">
+                        <button type="button" class="btn btn-success" style="width: 90px" @click="addToFavorite()"><img src="../img/base/cards-heart.svg" alt="" />收藏</button>
+                      </div>
+                      <div v-if="this.fav === 1">
+                        <button type="button" class="btn btn-success" style="width: 90px; background-color: white; color: #3c6a36 " @click="removeFromFavorite()"><img src="../img/base/cards-heart.svg" alt="" />已收藏</button>
+                      </div>
+                      <button type="button" class="btn btn-success" style="width: 90px"><img src="../img/base/share.svg" alt="" />分享</button>
                     </div>
                   </li>
 
@@ -921,6 +925,10 @@
             course: null,
             teacher: null,
             teachers: [],
+            memId: 1,
+            courseId: null,
+            createTime: new Date(),
+            fav: null,
           };
         },
         computed: {
@@ -949,7 +957,44 @@
             }));
           },
         },
-        methods: {},
+        methods: {
+          addToFavorite() {
+            const data = {
+              memId: this.memId,
+              courseId: this.courseId,
+              createTime: new Date()
+            };
+            console.log(data);
+
+            axios
+                    .post("http://localhost:8080/favcourses", data)
+                    .then((response) => {
+                      console.log(response.data);
+                      this.fav = 1;
+                      alert("加入收藏成功!");
+                    })
+                    .catch((error) => {
+                      console.error(error);
+                      alert("加入收藏失敗!");
+                    });
+          },
+          removeFromFavorite() {
+            const memId = this.memId;
+            const courseId = this.courseId;
+
+            axios
+                    .delete("http://localhost:8080/favcourses/" + memId + "/" + courseId)
+                    .then((response) => {
+                      console.log(response.data);
+                      this.fav = 0;
+                      alert("移除成功!");
+                    })
+                    .catch((error) => {
+                      console.error(error);
+                      alert("移除失敗!");
+                    });
+          }
+        },
         mixins: [courseDetailMixin],
 
         mounted() {
@@ -958,6 +1003,7 @@
             .then((courseResponse) => {
               this.course = courseResponse.data;
               console.log(this.course);
+              this.courseId = this.course.courseId;
               return axios.get(
                 "http://localhost:8080/teachers/" + this.course.teaId
               );
@@ -976,7 +1022,14 @@
               this.teachers = teachersResponse.data;
               console.log(this.teachers);
               // 儲存數據
+              const memId = this.memId;
+              const courseId = this.courseId;
+              return axios.get("http://localhost:8080/favcourses/" + memId + "/" + courseId)
             })
+                  .then((favcoursesResponse) => {
+                    this.fav = favcoursesResponse.data;
+                    console.log(this.fav);
+                  })
             .catch((error) => {
               console.error(error);
             });

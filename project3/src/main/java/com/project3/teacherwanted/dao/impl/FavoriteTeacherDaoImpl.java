@@ -5,6 +5,7 @@ import com.project3.teacherwanted.model.vo.FavoriteCourseVo;
 import com.project3.teacherwanted.model.vo.FavoriteTeacherVo;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -30,7 +31,25 @@ public class FavoriteTeacherDaoImpl implements FavoriteTeacherDao {
     }
 
     @Override
-    public void deleteFavTeacher(Integer id) {
-        entityManager.remove(getFavTeacherById(id));
+    public void deleteFavTeacher(Integer memId, Integer teaId) {
+        String hql = "DELETE FROM FavoriteTeacherVo ft WHERE ft.memId = :memId AND ft.teaId = :teaId";
+        entityManager.createQuery(hql)
+                .setParameter("memId", memId)
+                .setParameter("teaId", teaId)
+                .executeUpdate();
+    }
+
+    @Override
+    public int checkFavTeacher(Integer memId, Integer teaId) {
+        String hql = "SELECT ft FROM FavoriteTeacherVo ft WHERE ft.memId = :memId AND ft.teaId = :teaId";
+        TypedQuery<FavoriteTeacherVo> query = entityManager.createQuery(hql, FavoriteTeacherVo.class)
+                .setParameter("memId", memId)
+                .setParameter("teaId", teaId);
+        List<FavoriteTeacherVo> resultList = query.getResultList();
+        if (resultList.isEmpty()) {
+            return 0;
+        } else {
+            return 1;
+        }
     }
 }
