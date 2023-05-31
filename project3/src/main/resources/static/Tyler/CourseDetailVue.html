@@ -971,11 +971,11 @@
                     .then((response) => {
                       console.log(response.data);
                       this.fav = 1;
-                      alert("加入收藏成功!");
+                      console.log("加入收藏成功!");
                     })
                     .catch((error) => {
                       console.error(error);
-                      alert("加入收藏失敗!");
+                      console.log("加入收藏失敗!");
                     });
           },
           removeFromFavorite() {
@@ -987,11 +987,11 @@
                     .then((response) => {
                       console.log(response.data);
                       this.fav = 0;
-                      alert("移除成功!");
+                      console.log("移除成功!");
                     })
                     .catch((error) => {
                       console.error(error);
-                      alert("移除失敗!");
+                      console.log("移除失敗!");
                     });
           }
         },
