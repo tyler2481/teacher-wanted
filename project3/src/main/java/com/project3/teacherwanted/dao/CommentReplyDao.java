@@ -11,4 +11,6 @@ public interface CommentReplyDao {
     void createReply(CommentReplyVo commentReply);
     void updateReply(CommentReplyVo commentReply);
     void deleteReply(Integer id);
+
+    int deleteRepliesByCommentId(Integer id);
 }

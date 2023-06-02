@@ -22,7 +22,7 @@ public class CourseCommentDaoImpl implements CourseCommentDao {
 
     @Override
     public List<CourseCommentVo> getCommentsByCourseId(Integer courseId) {
-        String hql = "FROM CourseCommentVo cr WHERE cr.courseId = :courseId";
+        String hql = "FROM CourseCommentVo cr WHERE cr.courseId = :courseId ORDER BY cr.courseCommentId DESC";
         TypedQuery<CourseCommentVo> query = entityManager.createQuery(hql, CourseCommentVo.class);
         query.setParameter("courseId", courseId);
         return query.getResultList();

@@ -15,6 +15,7 @@ public class CourseCommentVo {
     private Integer courseCommentId;
     private Integer courseId;
     private Integer memId;
+    private String commentTitle;
     private String courseCommentContext;
     private Date createTime;
     private Date updateTime;

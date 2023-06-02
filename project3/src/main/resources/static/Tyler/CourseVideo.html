@@ -105,16 +105,19 @@
               class="flexWrap flexAllCenter"
               style="position: relative; top: 2px"
             >
-              <div class="miniMobile">
-                <form id="navSearch" action="">
+              <div id="searchHead" class="miniMobile">
+                <form id="navSearch" ref="navSearch"
+                      @submit.prevent="handleSearch">
                   <select>
                     <option>課程</option>
                     <option>活動</option>
                     <option>商城</option>
                     <option>許願</option>
                   </select>
-                  <input type="text" />
-                  <img src="../img/base/search.svg" alt="" />
+                  <input type="text" v-model="keyword"/>
+                  <img src="../img/base/search.svg"
+                       id="searchButton"
+                       @click="handleSearch"/>
                 </form>
               </div>
               <img
@@ -243,7 +246,7 @@
               style="height: 30%"
             />
           </li>
-          <!-- 上課筆記 -->
+          <!-- 老師介紹 -->
           <li
             id="pageLinkBackground2"
             class="MobileNone col_25 forAllCenterFlex pageTouching"
@@ -254,7 +257,7 @@
               style="height: 30%"
             />
             <h2 id="pageLink2" class="pageLinkText forAllCenterFlex">
-              上課筆記
+              老師介紹
             </h2>
             <img
               src="../img/lession/right-arrow.png"
@@ -337,70 +340,70 @@
         </h3>
         <h1>&nbsp;</h1>
 
-        <div class="introduceTeacher" v-if="teacherWithPhotoUrl">
-          <h1>老師介紹</h1>
-          <h1>&nbsp;</h1>
-          <div class="forFlex">
-            <!-- 老師頭貼那區 -->
-            <div class="forHorizontalCenterFlex col_40">
-              <ul class="forHorizontalCenterFlex teacherPhoto">
-                <li class="forHorizontalCenterFlex">
-                  <img :src="teacherWithPhotoUrl.teacherPhotoUrl" alt="" />
-                </li>
-                <li class="forHorizontalCenterFlex" style="padding-top: 5%">
-                  <h3>{{teacher.teaName}}</h3>
-                </li>
-                <li class="forHorizontalCenterFlex" style="padding-top: 5%">
-                  <h3>資深工程師</h3>
-                </li>
-                <li class="forHorizontalCenterFlex" style="padding-top: 5%">
-                  <h2
-                    class="btn"
-                    style="
+
+      </section>
+      <section class="" v-else="teacherWithPhotoUrl">尚無圖片</section>
+      <!-- 分頁1 課程介紹結束 -->
+
+      <!-- 分頁2 老師介紹開始 -->
+      <section id="page2" class="containerLession">
+        <div class="bulletinBoard borderShadow">
+          <div class="introduceTeacher" v-if="teacherWithPhotoUrl">
+            <h1>老師介紹</h1>
+            <h1>&nbsp;</h1>
+            <div class="forFlex">
+              <!-- 老師頭貼那區 -->
+              <div class="forHorizontalCenterFlex col_40">
+                <ul class="forHorizontalCenterFlex teacherPhoto">
+                  <li class="forHorizontalCenterFlex">
+                    <img :src="teacherWithPhotoUrl.teacherPhotoUrl" alt="" />
+                  </li>
+                  <li class="forHorizontalCenterFlex" style="padding-top: 5%">
+                    <h3>{{teacher.teaName}}</h3>
+                  </li>
+                  <li class="forHorizontalCenterFlex" style="padding-top: 5%">
+                    <h3>資深工程師</h3>
+                  </li>
+                  <li class="forHorizontalCenterFlex" style="padding-top: 5%">
+                    <h2
+                            class="btn"
+                            style="
                       width: 50%;
                       display: flex;
                       align-self: center;
                       justify-content: center;
                     "
-                    @click="teaInfoClick(course)"
-                  >
-                    更多課程
-                  </h2>
-                </li>
-              </ul>
-            </div>
-            <!-- 老師頭貼那區結束 -->
+                            @click="teaInfoClick(course)"
+                    >
+                      更多課程
+                    </h2>
+                  </li>
+                </ul>
+              </div>
+              <!-- 老師頭貼那區結束 -->
 
-            <!-- 老師簡介 -->
-            <div class="col_60">
-              <h1>&nbsp;</h1>
-              <h3>JAVA 語言課程將由具有豐富實踐經驗的專業講師擔任。</h3>
-              <h3>他熟悉 Java SE 平台的開發技術和相關工具，</h3>
-              <h3>能夠向學員講解清晰易懂的課程內容，</h3>
-              <h3>解答學員的問題，並提供實用的開發技巧。</h3>
-              <h3>他們還擁有豐富的實踐經驗，能夠引導學員掌握開發技能，</h3>
-              <h3>並在學習過程中給予指導和建議。</h3>
-              <h3>JAVA 語言課程將由具有豐富實踐經驗的專業講師擔任。</h3>
-              <h3>他熟悉 Java SE 平台的開發技術和相關工具，</h3>
-              <h3>能夠向學員講解清晰易懂的課程內容，</h3>
-              <h3>解答學員的問題，並提供實用的開發技巧。</h3>
-              <h3>他們還擁有豐富的實踐經驗，能夠引導學員掌握開發技能，</h3>
-              <h3>並在學習過程中給予指導和建議。</h3>
+              <!-- 老師簡介 -->
+              <div class="col_60">
+                <h1>&nbsp;</h1>
+                <h3>JAVA 語言課程將由具有豐富實踐經驗的專業講師擔任。</h3>
+                <h3>他熟悉 Java SE 平台的開發技術和相關工具，</h3>
+                <h3>能夠向學員講解清晰易懂的課程內容，</h3>
+                <h3>解答學員的問題，並提供實用的開發技巧。</h3>
+                <h3>他們還擁有豐富的實踐經驗，能夠引導學員掌握開發技能，</h3>
+                <h3>並在學習過程中給予指導和建議。</h3>
+                <h3>JAVA 語言課程將由具有豐富實踐經驗的專業講師擔任。</h3>
+                <h3>他熟悉 Java SE 平台的開發技術和相關工具，</h3>
+                <h3>能夠向學員講解清晰易懂的課程內容，</h3>
+                <h3>解答學員的問題，並提供實用的開發技巧。</h3>
+                <h3>他們還擁有豐富的實踐經驗，能夠引導學員掌握開發技能，</h3>
+                <h3>並在學習過程中給予指導和建議。</h3>
+              </div>
+              <!-- 老師簡介結束 -->
             </div>
-            <!-- 老師簡介結束 -->
           </div>
         </div>
       </section>
-      <section class="" v-else="teacherWithPhotoUrl">尚無圖片</section>
-      <!-- 分頁1 課程介紹結束 -->
-
-      <!-- 分頁2 上課筆記開始 -->
-      <section id="page2" class="containerLession">
-        <div class="bulletinBoard borderShadow">
-          <h1>目前還沒有公告喔</h1>
-        </div>
-      </section>
-      <!-- 分頁2 上課筆記結束 -->
+      <!-- 分頁2 老師介紹結束 -->
 
       <!-- 分頁3 課程評價 -->
       <section
@@ -930,25 +933,6 @@
           isChapterHovered(index) {
             return index === this.hoveredChapterIndex;
           },
-          // playVideo(chapter) {
-          //   if (chapter && chapter.chapterFile) {
-          //     console.log(chapter.chapterFile);
-          //     const binaryData = atob(chapter.chapterFile);
-          //     const arrayBuffer = new ArrayBuffer(binaryData.length);
-          //     const uint8Array = new Uint8Array(arrayBuffer);
-
-          //     for (let i = 0; i < binaryData.length; i++) {
-          //       uint8Array[i] = binaryData.charCodeAt(i);
-          //     }
-
-          //     const blob = new Blob([uint8Array], { type: "video/mp4" });
-          //     const videoURL = URL.createObjectURL(blob);
-
-          //     // 將 videoURL 設定為資料屬性以供後續使用
-          //     this.videoURL = videoURL;
-          //     console.log(videoURL);
-          //   }
-          // },
           playVideo(chapter) {
             if (chapter && chapter.chapterFile) {
               const binaryData = atob(chapter.chapterFile);
@@ -1010,6 +994,37 @@
             .catch((error) => {
               console.error(error);
             });
+        },
+      });
+      new Vue({
+        el: "#searchHead",
+        data() {
+          return {
+            keyword: "",
+            category: "課程",
+          };
+        },
+        methods: {
+          handleSearch() {
+            const params = new URLSearchParams();
+            params.append("keyword", this.keyword);
+            params.append("category", this.category);
+
+            const url = `http://localhost:8080/courses/${this.keyword}`;
+            const urlResult = `./CourseSearchRsVue.html?${params.toString()}`;
+            window.location.href = urlResult;
+
+            axios
+                    .get(url)
+                    .then((response) => {
+                      // 更新 courses 數組
+                      bus.$emit("search-results", response.data);
+                      console.log(this.courses);
+                    })
+                    .catch((error) => {
+                      console.error(error);
+                    });
+          },
         },
       });
     </script>

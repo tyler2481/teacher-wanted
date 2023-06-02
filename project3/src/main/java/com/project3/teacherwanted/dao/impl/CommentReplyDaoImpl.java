@@ -4,9 +4,10 @@ import com.project3.teacherwanted.dao.CommentReplyDao;
 import com.project3.teacherwanted.model.vo.CommentReplyVo;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
+import jakarta.persistence.Query;
+
 
 import java.util.List;
 
@@ -47,5 +48,14 @@ public class CommentReplyDaoImpl implements CommentReplyDao {
     @Override
     public void deleteReply(Integer id) {
         entityManager.remove(getReplyById(id));
+    }
+
+    @Override
+    public int deleteRepliesByCommentId(Integer id) {
+        String hql = "DELETE FROM CommentReplyVo WHERE courseCommentId = :courseCommentId";
+        Query query = entityManager.createQuery(hql);
+        query.setParameter("courseCommentId", id);
+        int deletedCount = query.executeUpdate();
+        return deletedCount;
     }
 }

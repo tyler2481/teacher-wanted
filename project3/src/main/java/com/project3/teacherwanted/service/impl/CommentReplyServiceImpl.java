@@ -43,4 +43,9 @@ public class CommentReplyServiceImpl implements CommentReplyService {
     public void deleteReply(Integer id) {
         commentReplyDao.deleteReply(id);
     }
+
+    @Override
+    public int deleteRepliesByCommentId(Integer id) {
+        return commentReplyDao.deleteRepliesByCommentId(id);
+    }
 }

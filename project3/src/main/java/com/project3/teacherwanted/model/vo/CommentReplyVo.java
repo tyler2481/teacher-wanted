@@ -17,7 +17,7 @@ public class CommentReplyVo {
     private Integer courseCommentId;
     private Integer memId;
     private Integer teaId;
-    private String replyContext;
+    private String replyContent;
     private Date createTime;
     private Date updateTime;
 }

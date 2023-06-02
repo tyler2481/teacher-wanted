@@ -514,7 +514,7 @@
             params.append("category", this.category);
 
             const url = `http://localhost:8080/courses/${this.keyword}`;
-            const urlResult = `http://127.0.0.1:5501/CourseSearchRsVue.html?${params.toString()}`;
+            const urlResult = `./CourseSearchRsVue.html?${params.toString()}`;
             window.location.href = urlResult;
 
             axios
