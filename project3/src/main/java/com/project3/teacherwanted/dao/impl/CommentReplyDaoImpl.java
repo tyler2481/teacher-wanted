@@ -23,10 +23,10 @@ public class CommentReplyDaoImpl implements CommentReplyDao {
     }
 
     @Override
-    public List<CommentReplyVo> getRepliesByCommentId(Integer commentReplyId) {
-        String hql = "FROM CommentReplyVo cr WHERE cr.commentReplyId = :commentReplyId";
+    public List<CommentReplyVo> getRepliesByCommentId(Integer commentId) {
+        String hql = "FROM CommentReplyVo cr WHERE cr.courseCommentId = :courseCommentId";
         TypedQuery<CommentReplyVo> query = entityManager.createQuery(hql, CommentReplyVo.class);
-        query.setParameter("commentReplyId", commentReplyId);
+        query.setParameter("courseCommentId", commentId);
         return query.getResultList();
     }
 

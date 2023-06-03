@@ -35,6 +35,11 @@ public class CourseCommentServiceImpl implements CourseCommentService {
     }
 
     @Override
+    public void editComment(CourseCommentVo courseComment) {
+        courseCommentDao.editComment(courseComment);
+    }
+
+    @Override
     public void updateComment(CourseCommentVo courseComment) {
         courseCommentDao.updateComment(courseComment);
     }

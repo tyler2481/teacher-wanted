@@ -1,6 +1,7 @@
 package com.project3.teacherwanted.controller;
 
 import com.project3.teacherwanted.model.dto.CommentsResponse;
+import com.project3.teacherwanted.model.vo.CommentReplyVo;
 import com.project3.teacherwanted.model.vo.CourseCommentVo;
 import com.project3.teacherwanted.model.vo.CourseVo;
 import com.project3.teacherwanted.model.vo.MemberVo;
@@ -63,6 +64,18 @@ public class CourseCommentController {
     public ResponseEntity<Void> createComment(@RequestBody @Valid CourseCommentVo courseComment) {
         courseCommentService.createComment(courseComment);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PutMapping("/comment/{id}")
+    public ResponseEntity<Void> editComment(@PathVariable("id") Integer id, @RequestBody @Valid CourseCommentVo courseComment) {
+        CourseCommentVo originComment = courseCommentService.getCommentsById(id);
+        if (originComment == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        courseComment.setCourseCommentId(id);
+        courseComment.setCreateTime(originComment.getCreateTime());
+        courseCommentService.editComment(courseComment);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("/comments/{id}")

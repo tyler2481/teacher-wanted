@@ -20,8 +20,8 @@ public class CommentReplyServiceImpl implements CommentReplyService {
     }
 
     @Override
-    public List<CommentReplyVo> getRepliesByCommentId(Integer commentReplyId) {
-        return commentReplyDao.getRepliesByCommentId(commentReplyId);
+    public List<CommentReplyVo> getRepliesByCommentId(Integer commentId) {
+        return commentReplyDao.getRepliesByCommentId(commentId);
     }
 
     @Override

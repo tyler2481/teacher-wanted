@@ -1,13 +1,9 @@
 package com.project3.teacherwanted.service.impl;
 
-import com.project3.teacherwanted.dao.MemberDao;
-import com.project3.teacherwanted.model.dto.MemberRegisterRequest;
 import com.project3.teacherwanted.model.vo.MemberVo;
 import com.project3.teacherwanted.service.MemberService;
 import com.project3.teacherwanted.util.MemberRepository;
 import jakarta.annotation.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 @Repository

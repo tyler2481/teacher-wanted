@@ -39,6 +39,11 @@ public class CourseCommentDaoImpl implements CourseCommentDao {
     }
 
     @Override
+    public void editComment(CourseCommentVo courseComment) {
+        entityManager.merge(courseComment);
+    }
+
+    @Override
     public void updateComment(CourseCommentVo courseComment) {
         entityManager.merge(courseComment);
     }

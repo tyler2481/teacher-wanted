@@ -10,7 +10,9 @@ public interface CourseCommentService {
 
     CourseCommentVo getCommentsById(Integer id);
     void createComment(CourseCommentVo courseComment);
+    void editComment(CourseCommentVo courseComment);
     void updateComment(CourseCommentVo courseComment);
 
     void deleteComment(Integer id);
+
 }

@@ -382,14 +382,14 @@
         <h3 v-html="courseWithPhotoUrl.courseDetail"></h3>
         <h1>&nbsp;</h1>
 
-        <h1>課程目標</h1>
-        <h1>&nbsp;</h1>
-        <h3>◆瞭解 Java SE 平台的應用和相關的開發環境。</h3>
-        <h3>◆掌握 Java 程式語言的基本概念、語法結構和開發技術。</h3>
-        <h3>◆熟悉面向對象程式設計的基本概念和設計模式。</h3>
-        <h3>◆學習如何開發出簡單的應用程式。</h3>
-        <h3>◆增強解決問題和調試程式的能力。</h3>
-        <h1>&nbsp;</h1>
+<!--        <h1>課程目標</h1>-->
+<!--        <h1>&nbsp;</h1>-->
+<!--        <h3>◆瞭解 Java SE 平台的應用和相關的開發環境。</h3>-->
+<!--        <h3>◆掌握 Java 程式語言的基本概念、語法結構和開發技術。</h3>-->
+<!--        <h3>◆熟悉面向對象程式設計的基本概念和設計模式。</h3>-->
+<!--        <h3>◆學習如何開發出簡單的應用程式。</h3>-->
+<!--        <h3>◆增強解決問題和調試程式的能力。</h3>-->
+<!--        <h1>&nbsp;</h1>-->
 
         <h1>上課前需要先準備</h1>
         <h1>&nbsp;</h1>
@@ -573,7 +573,7 @@
                     </div>
                 </li>
             </ul>
-            <button type="button" class="btn btn-secondary btn-sm" style="height: 40px" @click="togglePopup">我要發問
+            <button type="button" class="btn btn-secondary btn-sm" style="height: 40px" @click="togglePop">我要發問
             </button>
         </div>
         <!-- 問題查詢結束 -->
@@ -592,7 +592,7 @@
             </div>
             <div style="text-align: right; margin-top: 20px">
                 <button type="button" class="btn btn-outline-success" style="background-color: white; color: #3c6a36"
-                        @click="togglePopup">
+                        @click="togglePop">
                     返回
                 </button>
                 <button type="button" class="btn btn-outline-success" style="background-color: white; color: #3c6a36"
@@ -607,15 +607,45 @@
         <!-- 問題 -->
         <div class="forFlex" style="padding: 1%; box-sizing: border-box" v-for="(comment, index) in comments"
              :key="index">
+            <div
+                    :style="{ display: showPopupStates[index] ? 'block' : 'none' }"
+                    style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); border: solid 1px darkgray; background-color: white; width: 600px; padding: 20px;">
+                <div class="input-group mb-3">
+                    <span class="input-group-text">留言標題</span>
+                    <input type="text" class="form-control" v-model="comment.commentTitle">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-text">留言內容</span>
+                    <textarea class="form-control" aria-label="With textarea" style="height: 200px"
+                              v-model="comment.courseCommentContext"></textarea>
+                </div>
+                <div style="text-align: right; margin-top: 20px">
+                    <button type="button" class="btn btn-outline-success" style="background-color: white; color: #3c6a36"
+                            @click="togglePopup(index)">
+                        返回
+                    </button>
+                    <button type="button" class="btn btn-outline-success" style="background-color: white; color: #3c6a36"
+                            @click="editComment(comment, index)">
+                        送出
+                    </button>
+                </div>
+            </div>
             <!-- 發問者圖片 -->
             <div class="forHorizontalCenterFlex" style="width: 20%">
                 <div class="member_name" style="width: 80%">
                     <img :src="members[index].memPhoto" style=" width: 100%"/><br/>
-                    <button type="button" class="btn btn-danger" style="background-color: darkred"
-                            v-if="memId === members[index].memId"
-                            @click="removeComment(comment)"
-                    >刪除
-                    </button>
+                    <div>
+                        <button type="button" class="btn btn-success"
+                                v-if="memId === members[index].memId"
+                                @click="togglePopup(index)"
+                        >修改
+                        </button>
+                        <button type="button" class="btn btn-danger" style="background-color: darkred"
+                                v-if="memId === members[index].memId"
+                                @click="removeComment(comment)"
+                        >刪除
+                        </button>
+                    </div>
                 </div>
             </div>
             <!-- 發問者結束 -->
@@ -654,47 +684,43 @@
                             <span class="comment_info">{{comment.commentTitle}}</span>
                         </li>
                         <!-- 發問標題結束 -->
-                        <div>{{comment.courseCommentContext}}</div>
+                        <h3>{{comment.courseCommentContext}}</h3>
                     </div>
                     <!-- 回覆區塊 -->
-                    <div class="replybox">
+                    <div class="replybox" v-for="(reply, index) in replies[index]"
+                         :key="index">
                         <!-- 留言 -->
                         <div
                                 class="forFlex"
                                 style="padding: 1%; box-sizing: border-box"
                         >
-                            <div class="forHorizontalCenterFlex" style="width: 20%">
+                            <div class="forHorizontalCenterFlex" style="width: 20%"
+                                >
                                 <div class="member_name" style="width: 80%">
-                                    <img src="../img/base/TeacherPhoto.png" style=" width: 100%"/><br/>
+                                    <img :src="'data:image/png;base64,' + reply.memPhoto" style=" width: 100%"/><br/>
                                 </div>
                             </div>
                             <div style="width: 80%">
                                 <ul>
                                     <!-- 時間 -->
-                                    <li class="forVerticalCenterFlex" style="height: 20px">
-                                        <span class="comment_info">2023/4/8</span><span
-                                            class="comment_info">授課教師</span><span
-                                            class="comment_info">{{this.teaName}}</span>
+                                    <li class="forVerticalCenterFlex" style="height: 20px"
+                                        >
+                                        <span class="comment_info">{{ reply.updateTime | formatDate }}</span><span
+                                            class="comment_info" v-if="reply.teaId === this.teaId">授課教師</span><span
+                                            class="comment_info">{{ reply.memName }}</span>
                                     </li>
                                     <!-- 時間結束 -->
                                     <!-- 回覆內容 -->
                                     <li style="padding-top: 1%">
-                                        <h3>
-                                            public class Meow { <br/>
-                                            public static void main(String[] args) { <br/>
-                                            int kun = 100; int times = kun / 10; <br/>
-                                            //每次喵一次10元，一個罐頭100元，計算要喵幾次 <br/>
-                                            System.out.println("我要喵 " + times + " 次！");
-                                            <br/>
-                                            } }
-                                        </h3>
+                                        <h3>{{ reply.replyContent }}</h3>
                                     </li>
                                     <!-- 回覆內容結束 -->
                                 </ul>
                             </div>
+<!--                            <img src="../img/base/icons8-trash-32.png"/><br/>-->
                         </div>
-                        <!-- 留言結束 -->
                     </div>
+                    <!-- 留言結束 -->
                     <div style="text-align: right">
                         <input class="form-control" type="text" placeholder="留言回覆"
                                aria-label="default input example" style="margin: 20px 0 20px 0"
@@ -823,10 +849,13 @@
                 commentStatus: 0,
                 replyContents: [],
                 replyContent: null,
-                replies:[],
+                replies: [],
+                replyMembers: [],
+                requests: [],
                 fav: null,
                 showPopup: false, // 初始化時設為 false，控制彈出框的顯示狀態
                 showupStates: [],
+                showPopupStates: [],
             };
         },
         computed: {
@@ -856,32 +885,60 @@
             },
         },
         methods: {
-            removeComment(comment){
+            editComment(comment, index){
                 const courseCommentId = comment.courseCommentId;
-                const repliesUrl = "http://localhost:8080/replies/" + courseCommentId;
-                const url = "http://localhost:8080/comments/" + courseCommentId;
+                const url = "http://localhost:8080/comment/" + courseCommentId;
+                const data = {
+                    courseId: this.courseId,
+                    memId: this.memId,
+                    commentTitle: comment.commentTitle,
+                    courseCommentContext: comment.courseCommentContext,
+                    updateTime: new Date(),
+                    commentStatus: 0
+                };
                 axios
-                    .delete(repliesUrl)
+                    .put(url, data)
                     .then((response) => {
-                        // 请求成功处理
-
-                        return axios.delete(url); // 返回第二个请求的Promise对象
-                    })
-                    .then((secondResponse) => {
-                        // 第二个请求成功后的处理逻辑
-                        alert("刪除成功！");
-                        // 移除該筆資料
-                        const index = this.comments.findIndex((c) => c.courseCommentId === courseCommentId);
-                        if (index !== -1) {
-                            this.comments.splice(index, 1);
-                        }
+                        // 請求成功處理
+                        console.log(response.data);
+                        this.$set(this.showPopupStates, index, !this.showPopupStates[index]); // 切換彈出框的顯示狀態
 
                     })
                     .catch((error) => {
-                        // 请求失败处理
-                        alert("刪除失敗:", error);
+                        // 請求失敗處理
+                        alert("修改失敗:", error);
                         console.error(error);
                     });
+            },
+            removeComment(comment) {
+                if (confirm("確定要刪除此留言嗎？")) {
+                    const courseCommentId = comment.courseCommentId;
+                    const repliesUrl = "http://localhost:8080/replies/" + courseCommentId;
+                    const url = "http://localhost:8080/comments/" + courseCommentId;
+                    axios
+                        .delete(repliesUrl)
+                        .then((response) => {
+                            // 請求成功處理
+
+                            return axios.delete(url); // 發起第二個請求
+                        })
+                        .then((secondResponse) => {
+                            // 第二個請求成功後處理
+                            alert("刪除成功！");
+                            // 移除該筆資料
+                            const index = this.comments.findIndex((c) => c.courseCommentId === courseCommentId);
+                            if (index !== -1) {
+                                this.comments.splice(index, 1);
+                                this.members.splice(index, 1);
+                            }
+
+                        })
+                        .catch((error) => {
+                            // 請求失敗處理
+                            alert("刪除失敗:", error);
+                            console.error(error);
+                        });
+                }
 
             },
             resolved(comment) {
@@ -902,11 +959,9 @@
                         },
                     })
                     .then((response) => {
-                        // 请求成功处理
                         comment.commentStatus = updatedStatus
                     })
                     .catch((error) => {
-                        // 请求失败处理
                         alert("更新失敗:", error);
                     });
             },
@@ -946,10 +1001,13 @@
                         console.log("移除失敗!");
                     });
             },
-            togglePopup() {
+            togglePop() {
                 this.showPopup = !this.showPopup; // 切換彈出框的顯示狀態
                 this.commentTitle = "";
                 this.courseCommentContext = "";//將輸入框內容清空
+            },
+            togglePopup(index) {
+                this.$set(this.showPopupStates, index, !this.showPopupStates[index]); // 切換彈出框的顯示狀態
             },
             toggleShowup(index) {
                 this.$set(this.showupStates, index, !this.showupStates[index]); // 切換彈出框的顯示狀態
@@ -980,8 +1038,10 @@
                             const base64Image = 'data:image/png;base64,' + member.memPhoto;
                             return {...member, memPhoto: base64Image};
                         })
+                        this.courseCommentIds = [];
                         this.comments = commentsResponse.data.courseComments.map(comment => {
                             this.showupStates.push(false);//初始化所有留言
+                            this.showPopupStates.push(false);//初始化所有留言
                             const updateTime = comment.updateTime;
                             const date = new Date(updateTime);
                             const formattedDate = date.toISOString().split('T')[0]; // 擷取日期部分，例如 "2023-06-01"
@@ -992,29 +1052,29 @@
                         });
                         console.log(this.comments);
                         console.log(this.members);
-
+                        const requests = [];
                         // 使用迴圈處理每個 courseCommentId
                         this.courseCommentIds.forEach((courseCommentId) => {
                             const url = "http://localhost:8080/replies/" + courseCommentId;
-
-                            // 發起請求
-                            const request = axios.get(url)
-                                .then((response) => {
-                                    // 對回應進行處理
-                                    this.replies = response.data;
-                                    // 做你想要的處理，例如存入回應陣列中
-                                    // this.replies = response.push(data);
-                                    console.log(this.replies);
-                                })
-                                .catch((error) => {
-                                    console.error(error);
-                                    // 處理錯誤情況
-                                });
+                            const request = axios.get(url);
+                            requests.push(request);
                         });
+                        this.replies = [];
+                        Promise.all(requests)
+                            .then((responses) => {
+                                console.log(responses)
+                                // 處理所有請求
+                                this.replies = responses.map((response) => response.data.courseComments);
+                                console.log(this.replies);
+                                this.replyMembers = responses.map((response) => response.data.members);
+                                console.log(this.replyMembers);
+                            })
+                            .catch((error) => {
+                                console.error(error);
+                            });
                     })
                     .catch((error) => {
                         console.error(error);
-                        console.log("失敗!");
                     });
             },
             replyComment(index) {
@@ -1033,6 +1093,24 @@
                         console.log(response.data);
                         this.$set(this.showupStates, index, !this.showupStates[index]); // 切換彈出框的顯示狀態
                         this.replyContents[index] = "";//將輸入框內容清空
+                        //刷新回覆
+                        const requests = [];
+                        // 使用迴圈處理每個 courseCommentId
+                        this.courseCommentIds.forEach((courseCommentId) => {
+                            const url = "http://localhost:8080/replies/" + courseCommentId;
+                            const request = axios.get(url);
+                            requests.push(request);
+                        });
+                        Promise.all(requests)
+                            .then((responses) => {
+                                this.replies = [];
+                                // 處理所有請求
+                                this.replies = responses.map((response) => response.data);
+                                console.log(this.replies);
+                            })
+                            .catch((error) => {
+                                console.error(error);
+                            });
                     })
                     .catch((error) => {
                         console.error(error);
@@ -1086,6 +1164,7 @@
                     })
                     this.comments = commentsResponse.data.courseComments.map(comment => {
                         this.showupStates.push(false);//初始化所有留言
+                        this.showPopupStates.push(false);//初始化所有留言
                         const updateTime = comment.updateTime;
                         const date = new Date(updateTime);
                         const formattedDate = date.toISOString().split('T')[0]; // 擷取日期部分，例如 "2023-06-01"
@@ -1096,29 +1175,32 @@
                     });
                     console.log(this.comments);
                     console.log(this.members);
-
+                    const requests = [];
                     // 使用迴圈處理每個 courseCommentId
                     this.courseCommentIds.forEach((courseCommentId) => {
                         const url = "http://localhost:8080/replies/" + courseCommentId;
-
-                        // 發起請求
-                        const request = axios.get(url)
-                            .then((response) => {
-                                // 對回應進行處理
-                                this.replies = response.data;
-                                // 做你想要的處理，例如存入回應陣列中
-                                // this.replies = response.push(data);
-                                console.log(this.replies);
-                            })
-                            .catch((error) => {
-                                console.error(error);
-                                // 處理錯誤情況
+                        const request = axios.get(url);
+                        requests.push(request);
                             });
-                        });
+                    Promise.all(requests)
+                        .then((responses) => {
+                            this.replies = [];
+                            // 處理所有請求
+                            this.replies = responses.map((response) => response.data);
+                            console.log(this.replies);
+                        })
+                        .catch((error) => {
+                            console.error(error);
+                    });
                 })
                 .catch((error) => {
                     console.error(error);
                 });
+            Vue.filter('formatDate', function(value) {
+                const dateTime = new Date(value);
+                const formattedDate = dateTime.toISOString().split('T')[0];
+                return formattedDate;
+            });
         },
     });
     new Vue({
