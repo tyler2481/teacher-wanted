@@ -165,17 +165,27 @@
                         style="
                 box-shadow: 0 4px 8px 0 rgba(81, 81, 81, 0.2),
                   0 6px 20px 0 rgba(0, 0, 0, 0.19);
+                  display: flex;
               "
                         v-if="courseWithPhotoUrl"
                 >
                     <!-- 課程圖片 -->
-                    <div class="col_55" style="display: flex">
+                    <div
+                            class="col_55"
+                            style="display: flex"
+                            v-for="index in photoCount"
+                            :key="index"
+                            v-if="index === photoValue && courseWithPhotoUrl['coursePhotoUrl' + index]"
+                    >
                         <img
-                                :src="courseWithPhotoUrl.coursePhotoUrl"
+                                :src="courseWithPhotoUrl['coursePhotoUrl' + index]"
                                 alt=""
-                                height="100%"
+                                style="width: 100%; height: 100%"
+                                @click="changeValue"
                         />
                     </div>
+                    <div class="col_55"
+                         style="display: flex; text-align: center; justify-content: center;align-content: center;" v-if="photoValue === 0">此課程尚未上傳圖片唷!</div>
                     <!-- 課程簡介 -->
                     <div
                             class="col_45 forAllCenterFlex"
@@ -374,7 +384,6 @@
         <h3>●課程時數：{{courseWithPhotoUrl.courseLength}}小時</h3>
         <h3>●觀看期限：{{courseWithPhotoUrl.coolingOffPeriod}} 個月。</h3>
         <h3>●同學人數：{{courseWithPhotoUrl.boughtCount}}人</h3>
-        <h3>●章節單元數：</h3>
         <h1>&nbsp;</h1>
 
         <h1>課程簡介</h1>
@@ -382,14 +391,14 @@
         <h3 v-html="courseWithPhotoUrl.courseDetail"></h3>
         <h1>&nbsp;</h1>
 
-<!--        <h1>課程目標</h1>-->
-<!--        <h1>&nbsp;</h1>-->
-<!--        <h3>◆瞭解 Java SE 平台的應用和相關的開發環境。</h3>-->
-<!--        <h3>◆掌握 Java 程式語言的基本概念、語法結構和開發技術。</h3>-->
-<!--        <h3>◆熟悉面向對象程式設計的基本概念和設計模式。</h3>-->
-<!--        <h3>◆學習如何開發出簡單的應用程式。</h3>-->
-<!--        <h3>◆增強解決問題和調試程式的能力。</h3>-->
-<!--        <h1>&nbsp;</h1>-->
+        <!--        <h1>課程目標</h1>-->
+        <!--        <h1>&nbsp;</h1>-->
+        <!--        <h3>◆瞭解 Java SE 平台的應用和相關的開發環境。</h3>-->
+        <!--        <h3>◆掌握 Java 程式語言的基本概念、語法結構和開發技術。</h3>-->
+        <!--        <h3>◆熟悉面向對象程式設計的基本概念和設計模式。</h3>-->
+        <!--        <h3>◆學習如何開發出簡單的應用程式。</h3>-->
+        <!--        <h3>◆增強解決問題和調試程式的能力。</h3>-->
+        <!--        <h1>&nbsp;</h1>-->
 
         <h1>上課前需要先準備</h1>
         <h1>&nbsp;</h1>
@@ -487,7 +496,7 @@
             <div class="forHorizontalCenterFlex" style="width: 20%">
                 <div class="member_name">
                     <img src="../img/lession/student2.png"/>
-                    <span><span>壞喵喵</span>
+                    <span>壞喵喵</span>
                 </div>
             </div>
             <div style="width: 80%">
@@ -519,7 +528,7 @@
             <div class="forHorizontalCenterFlex" style="width: 20%">
                 <div class="member_name">
                     <img src="../img/lession/student1.png"/>
-                    <span><span>喵喵</span>
+                    <span>喵喵</span>
                 </div>
             </div>
             <div style="width: 80%">
@@ -620,11 +629,13 @@
                               v-model="comment.courseCommentContext"></textarea>
                 </div>
                 <div style="text-align: right; margin-top: 20px">
-                    <button type="button" class="btn btn-outline-success" style="background-color: white; color: #3c6a36"
+                    <button type="button" class="btn btn-outline-success"
+                            style="background-color: white; color: #3c6a36"
                             @click="togglePopup(index)">
                         返回
                     </button>
-                    <button type="button" class="btn btn-outline-success" style="background-color: white; color: #3c6a36"
+                    <button type="button" class="btn btn-outline-success"
+                            style="background-color: white; color: #3c6a36"
                             @click="editComment(comment, index)">
                         送出
                     </button>
@@ -695,7 +706,7 @@
                                 style="padding: 1%; box-sizing: border-box"
                         >
                             <div class="forHorizontalCenterFlex" style="width: 20%"
-                                >
+                            >
                                 <div class="member_name" style="width: 80%">
                                     <img :src="'data:image/png;base64,' + reply.memPhoto" style=" width: 100%"/><br/>
                                 </div>
@@ -704,7 +715,7 @@
                                 <ul>
                                     <!-- 時間 -->
                                     <li class="forVerticalCenterFlex" style="height: 20px"
-                                        >
+                                    >
                                         <span class="comment_info">{{ reply.updateTime | formatDate }}</span><span
                                             class="comment_info" v-if="reply.teaId === this.teaId">授課教師</span><span
                                             class="comment_info">{{ reply.memName }}</span>
@@ -717,7 +728,7 @@
                                     <!-- 回覆內容結束 -->
                                 </ul>
                             </div>
-<!--                            <img src="../img/base/icons8-trash-32.png"/><br/>-->
+                            <!--                            <img src="../img/base/icons8-trash-32.png"/><br/>-->
                         </div>
                     </div>
                     <!-- 留言結束 -->
@@ -856,6 +867,9 @@
                 showPopup: false, // 初始化時設為 false，控制彈出框的顯示狀態
                 showupStates: [],
                 showPopupStates: [],
+                photoValue: 0,//圖片初始值
+                photoCount: 0,//計算圖片總數
+
             };
         },
         computed: {
@@ -863,7 +877,9 @@
                 if (this.course) {
                     return {
                         ...this.course,
-                        coursePhotoUrl: `data:image/png;base64,${this.course.coursePhoto1}`,
+                        coursePhotoUrl1: `data:image/png;base64,${this.course.coursePhoto1}`,
+                        coursePhotoUrl2: `data:image/png;base64,${this.course.coursePhoto2}`,
+                        coursePhotoUrl3: `data:image/png;base64,${this.course.coursePhoto3}`,
                     };
                 }
                 return null;
@@ -885,7 +901,14 @@
             },
         },
         methods: {
-            editComment(comment, index){
+            //切換圖片
+            changeValue() {
+                this.photoValue++;
+                if (this.photoValue > this.photoCount) {
+                    this.photoValue = 1;
+                }
+            },
+            editComment(comment, index) {
                 const courseCommentId = comment.courseCommentId;
                 const url = "http://localhost:8080/comment/" + courseCommentId;
                 const data = {
@@ -1121,6 +1144,7 @@
         mixins: [courseDetailMixin],
 
         mounted() {
+            let photoCount = 0;
             axios
                 .get("http://localhost:8080/course/" + courseId)
                 .then((courseResponse) => {
@@ -1129,6 +1153,21 @@
                     this.courseId = this.course.courseId;
                     this.teaId = this.course.teaId;
                     console.log(this.course);
+                    if(this.course.coursePhoto1 != null){
+                        photoCount = photoCount + 1;
+                    }
+                    if(this.course.coursePhoto2 != null){
+                        photoCount = photoCount + 1;
+                    }
+                    if(this.course.coursePhoto3 != null){
+                        photoCount = photoCount + 1;
+                    }
+                    this.photoCount = photoCount;
+                    console.log(this.photoCount);
+                    if(this.photoCount > 0){
+                        this.photoValue = 1;
+                    }
+
                     return axios.get(
                         "http://localhost:8080/teachers/" + this.course.teaId
                     );
@@ -1181,7 +1220,7 @@
                         const url = "http://localhost:8080/replies/" + courseCommentId;
                         const request = axios.get(url);
                         requests.push(request);
-                            });
+                    });
                     Promise.all(requests)
                         .then((responses) => {
                             this.replies = [];
@@ -1191,12 +1230,12 @@
                         })
                         .catch((error) => {
                             console.error(error);
-                    });
+                        });
                 })
                 .catch((error) => {
                     console.error(error);
                 });
-            Vue.filter('formatDate', function(value) {
+            Vue.filter('formatDate', function (value) {
                 const dateTime = new Date(value);
                 const formattedDate = dateTime.toISOString().split('T')[0];
                 return formattedDate;
