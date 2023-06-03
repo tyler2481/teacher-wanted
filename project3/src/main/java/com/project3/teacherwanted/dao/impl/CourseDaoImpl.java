@@ -1,7 +1,6 @@
 package com.project3.teacherwanted.dao.impl;
 
 import com.project3.teacherwanted.dao.CourseDao;
-import com.project3.teacherwanted.model.dto.CourseRequest;
 import com.project3.teacherwanted.model.vo.CourseVo;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -117,10 +116,15 @@ public class CourseDaoImpl implements CourseDao {
     }
 
     @Override
-    public void updateCourse(Integer courseId, CourseRequest courseRequest) {
+    public void updateCourseStatus(Integer courseId, CourseVo courseRequest) {
         CourseVo courseVo = session.find(CourseVo.class, courseId);
         courseVo.setCourseStatus(courseRequest.getCourseStatus());
         session.merge(courseVo);
+    }
+
+    @Override
+    public void updateCourse(Integer courseId, CourseVo courseRequest) {
+        session.merge(courseRequest);
     }
 
     @Override

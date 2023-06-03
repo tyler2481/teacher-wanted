@@ -489,7 +489,7 @@
           updateCourseStatus(course) {
             if (confirm("確認修改狀態嗎？")) {
               const courseId = course.courseId;
-              const url = "http://localhost:8080/courses/" + courseId;
+              const url = "http://localhost:8080/coursestatus/" + courseId;
 
               axios
                 .put(url, {

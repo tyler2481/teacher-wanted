@@ -1,7 +1,6 @@
 package com.project3.teacherwanted.controller;
 
 import com.project3.teacherwanted.model.dto.ChapterRequest;
-import com.project3.teacherwanted.model.dto.CourseRequest;
 import com.project3.teacherwanted.model.vo.CourseChapterVo;
 import com.project3.teacherwanted.model.vo.CourseVo;
 import com.project3.teacherwanted.model.vo.MemberVo;

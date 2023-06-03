@@ -4,7 +4,6 @@ import com.project3.teacherwanted.constant.Category;
 import com.project3.teacherwanted.constant.CourseCategory;
 import com.project3.teacherwanted.dao.CourseDao;
 import com.project3.teacherwanted.model.dto.CourseQueryParams;
-import com.project3.teacherwanted.model.dto.CourseRequest;
 import com.project3.teacherwanted.model.vo.CourseVo;
 import com.project3.teacherwanted.service.CourseService;
 import jakarta.transaction.Transactional;
@@ -52,7 +51,12 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public void updateCourse(Integer courseId, CourseRequest courseRequest) {
+    public void updateCourseStatus(Integer courseId, CourseVo courseRequest) {
+        courseDao.updateCourseStatus(courseId, courseRequest);
+    }
+
+    @Override
+    public void updateCourse(Integer courseId, CourseVo courseRequest) {
         courseDao.updateCourse(courseId, courseRequest);
     }
 

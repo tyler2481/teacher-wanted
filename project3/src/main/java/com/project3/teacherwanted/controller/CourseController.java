@@ -3,7 +3,6 @@ package com.project3.teacherwanted.controller;
 import com.project3.teacherwanted.constant.Category;
 import com.project3.teacherwanted.constant.CourseCategory;
 import com.project3.teacherwanted.model.dto.CourseQueryParams;
-import com.project3.teacherwanted.model.dto.CourseRequest;
 import com.project3.teacherwanted.model.vo.CourseVo;
 import com.project3.teacherwanted.service.CourseService;
 import com.project3.teacherwanted.util.Page;
@@ -100,13 +99,31 @@ public class CourseController {
         return ResponseEntity.status(HttpStatus.CREATED).body(courseVoReturn);
     }
 
-    @PutMapping("/courses/{courseId}")
-    public ResponseEntity<CourseVo> updateCourse(@PathVariable Integer courseId,
-                                                 @RequestBody @Valid CourseRequest courseRequest){
+    @PutMapping("/coursestatus/{courseId}")
+    public ResponseEntity<CourseVo> updateCourseStatus(@PathVariable Integer courseId,
+                                                 @RequestBody @Valid CourseVo courseRequest){
         CourseVo courseVo = courseService.getCourseById(courseId);
         if(courseVo == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }else {
+            courseService.updateCourseStatus(courseId, courseRequest);
+            CourseVo updatedCourse = courseService.getCourseById(courseId);
+            return ResponseEntity.status(HttpStatus.OK).body(updatedCourse);
+        }
+    }
+    @PutMapping("/courses/{courseId}")
+    public ResponseEntity<CourseVo> updateCourse(@PathVariable Integer courseId,
+                                                       @RequestBody @Valid CourseVo courseRequest){
+        CourseVo courseVo = courseService.getCourseById(courseId);
+        if(courseVo == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }else {
+            courseRequest.setCourseId(courseId);
+            courseRequest.setCourseTotalRank(courseVo.getCourseTotalRank());
+            courseRequest.setBoughtCount(courseVo.getBoughtCount());
+            courseRequest.setCourseTotalEvaluate(courseVo.getCourseTotalEvaluate());
+            courseRequest.setCourseStatus(courseVo.getCourseStatus());
+            courseRequest.setCreateTime(courseVo.getCreateTime());
             courseService.updateCourse(courseId, courseRequest);
             CourseVo updatedCourse = courseService.getCourseById(courseId);
             return ResponseEntity.status(HttpStatus.OK).body(updatedCourse);

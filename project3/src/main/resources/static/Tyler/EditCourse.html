@@ -403,137 +403,30 @@
                       </div>
                     </section>
                     <!-- 課程圖片 結束 -->
-                    <!-- 上傳影片類型 開始 -->
-                    <div class="ip2">
-                      上傳類型：
-                      <input
-                        type="radio"
-                        name="uploadType"
-                        v-model="selectedUploadType"
-                        value="local"
-                        checked
-                      />本機檔案
-                      <input
-                        type="radio"
-                        name="uploadType"
-                        v-model="selectedUploadType"
-                        value="youtube"
-                      />YouTube連結
-                    </div>
-                    <!-- 上傳影片類型 結束 -->
                   </div>
                   <!-- 右半部分 結束 -->
-                  <table class="table">
-                    <thead>
-                      <tr class="table_title">
-                        <th scope="col">章節順序</th>
-                        <th scope="col">章節名稱</th>
-                        <th scope="col">影片資訊</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <template v-for="(chapter, index) in chapters">
-                        <!-- 電腦版課程影片開始 -->
-                        <tr>
-                          <td class="upload_com">
-                            <h6 :ref="'chapterOrderRef' + index">
-                              {{ index + 1 }}
-                            </h6>
-                            <!-- 章節封面 開始 -->
-                            <section class="oneActiveEdit">
-                              <div><h6>章節封面</h6></div>
-                              <div class="flexVerticalCenter">
-                                <input
-                                  type="file"
-                                  :class="'upload2_' + index"
-                                  :data-preview="'preview4_' + index"
-                                  accept="image/*"
-                                  @change="handleChapterImageUpload('.upload2_' + index, '.chapter_preview' , 'chapterPhoto', $event, index)"
-                                  :key="index"
-                                />
-                              </div>
-                              <div
-                                class="preview"
-                                :data-preview="'preview4_' + index"
-                              >
-                                <img :src="chapterPhotoUrls[index]" alt="" />
-                              </div>
-                            </section>
-                          </td>
-                          <!-- 章節封面 結束 -->
-                          <!-- </th> -->
-
-                          <td class="upload_com">
-                            <br />
-                            <h6>章節名稱</h6>
-                            <input
-                              type="text"
-                              style="width: 300px; margin-bottom: 5px"
-                              v-model="chapter.chapterTitle"
-                            />
-                          </td>
-                          <td class="upload_com">
-                            <br />
-                            <!-- 上傳影片開始 -->
-                            <div v-if="selectedUploadType === 'local'">
-                              <div><h6>上傳影片</h6></div>
-                              <div class="flexVerticalCenter">
-                                <input
-                                  type="file"
-                                  style="width: 300px"
-                                  accept="video/*"
-                                  @change="handleVideoUpload($event, index)"
-                                />
-                              </div>
-                            </div>
-                            <div v-if="selectedUploadType === 'youtube'">
-                              <div>
-                                <h6 style="margin-bottom: 5px">影片網址</h6>
-                              </div>
-                              <div class="flexVerticalCenter">
-                                <input
-                                  type="text"
-                                  style="width: 300px"
-                                  v-model="chapter.chapterLink"
-                                />
-                              </div>
-                            </div>
-                            <!-- 上傳影片結束 -->
-                          </td>
-                        </tr>
-                        <!-- 電腦版課程影片結束 -->
-                      </template>
-                    </tbody>
-                  </table>
                   <!-- 表單 結束 -->
                   <div class="flexAllCenter submitActiveAdd">
                     <p
-                      class="flexAllCenter"
-                      id="submitActiveAddBtn"
-                      @click="addChapter"
+                            class="flexAllCenter"
+                            id="submitActiveAddBtn"
+                            @click="toEditChapter"
                     >
-                      +
+                      修改章節
                     </p>
                     <p
                       class="flexAllCenter"
                       id="submitActiveAddBtn"
-                      @click="removeChapter"
+                      @click="goBack"
                     >
-                      -
+                      取消
                     </p>
                     <p
                       class="flexAllCenter"
                       id="submitActiveAddBtn"
-                      @click="resetFields"
+                      @click="updateCourse"
                     >
-                      清空
-                    </p>
-                    <p
-                      class="flexAllCenter"
-                      id="submitActiveAddBtn"
-                      @click="createCourse"
-                    >
-                      送出
+                      修改
                     </p>
                   </div>
                 </div>
@@ -686,6 +579,13 @@
         },
 
         methods: {
+          toEditChapter(){
+            const targetUrl = `./EditChapters.html?courseId=${courseId}`;
+            window.location.href = targetUrl;
+          },
+          goBack() {
+            window.history.back(); // 返回上一页
+          },
           addChapter() {
             this.chapters.push({ chapterTitle: "", chapterVideo: null });
           },
@@ -767,6 +667,42 @@
                   // 请求失败后的处理逻辑
                   alert("修改失敗，請重試！！");
                 });
+            }
+          },
+          updateCourse(){
+            if (confirm("確認修改課程嗎？")) {
+
+              const coursePhoto1 = this.coursePhotos.coursePhoto1 ? this.coursePhotos.coursePhoto1 : this.course.coursePhoto1;
+              const coursePhoto2 = this.coursePhotos.coursePhoto2 ? this.coursePhotos.coursePhoto2 : this.course.coursePhoto2;
+              const coursePhoto3 = this.coursePhotos.coursePhoto3 ? this.coursePhotos.coursePhoto3 : this.course.coursePhoto3;
+
+
+              const data = {
+                courseName: this.courseName,
+                courseCategoryId: this.courseCategoryId,
+                courseDetail: this.courseDetail,
+                coursePre: this.coursePre,
+                coursePrice: this.coursePrice,
+                courseLength: this.courseLength,
+                coolingOffPeriod: this.coolingOffPeriod,
+                teaId: this.teaId,
+                updateTime: new Date(),
+                coursePhoto1: coursePhoto1,
+                coursePhoto2: coursePhoto2,
+                coursePhoto3: coursePhoto3,
+              };
+              console.log(data);
+
+              axios
+                      .put("http://localhost:8080/courses/" + courseId, data)
+                      .then((response) => {
+                        console.log(response.data);
+                      })
+                      .catch((error) => {
+                        console.error(error);
+                        // 请求失败后的处理逻辑
+                        alert("修改失敗，請重試！！");
+                      });
             }
           },
           //上傳圖片相關
